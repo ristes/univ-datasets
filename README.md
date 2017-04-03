@@ -11,12 +11,12 @@ The generated data can be found here:
    * [Ds1](ds/data/ds1.nt.zip)
       * **1.502.713** triples, 
       * **222.244** instances, 
-      * **~9.5**MB
+      * **9.1**MB
    * [Ds2](ds/data/ds2.nt.zip)
       * **11.502.698** triples, 
       * **2.222.244** instances, 
-      * **~60**MB
+      * **59.3**MB
    * [Ds3](ds/data/ds3.nt.zip): 
       * **17.264.364** triples, 
       * **3.333.355** instances, 
-      * **~90**MB
+      * **89.9**MB
