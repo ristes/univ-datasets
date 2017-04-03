@@ -1,0 +1,203 @@
+@prefix map: <#> .
+@prefix db: <> .
+@prefix univ: <http:univ#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix d2rq: <http://www.wiwiss.fu-berlin.de/suhl/bizer/D2RQ/0.1#> .
+@prefix jdbc: <http://d2rq.org/terms/jdbc/> .
+
+map:database a d2rq:Database;
+	d2rq:jdbcDriver "com.mysql.jdbc.Driver";
+	d2rq:jdbcDSN "jdbc:mysql://localhost:3306/sem-security-4?useUnicode=true";
+	d2rq:username "root";
+	d2rq:password "admin";
+	jdbc:autoReconnect "true";
+	jdbc:zeroDateTimeBehavior "convertToNull";
+	.
+
+
+
+# Table Faculty
+map:Faculty a d2rq:ClassMap;
+	d2rq:dataStorage map:database;
+	d2rq:uriPattern "Faculty/@@Faculty.id@@";
+	d2rq:class univ:Faculty;
+	d2rq:classDefinitionLabel "Faculty";
+	.
+map:Faculty_name a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:Faculty;
+	d2rq:property rdfs:label;
+	d2rq:propertyDefinitionLabel "Faculty name";
+	d2rq:column "Faculty.name";
+	.
+
+
+# Table Studyprogram
+map:Studyprogram a d2rq:ClassMap;
+	d2rq:dataStorage map:database;
+	d2rq:uriPattern "Studyprogram/@@Studyprogram.id@@";
+	d2rq:class univ:Studyprogram;
+	d2rq:classDefinitionLabel "Studyprogram";
+	.
+map:Studyprogram_name a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:Studyprogram;
+	d2rq:property rdfs:label;
+	d2rq:propertyDefinitionLabel "Studyprogram name";
+	d2rq:column "Studyprogram.name";
+	.
+map:Studyprogram_faculty_id__ref a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:Studyprogram;
+	d2rq:property univ:faculty;
+	d2rq:refersToClassMap map:Faculty;
+	d2rq:join "Studyprogram.faculty_id => Faculty.id";
+	.
+
+
+
+# Table Subject
+map:Subject a d2rq:ClassMap;
+	d2rq:dataStorage map:database;
+	d2rq:uriPattern "Subject/@@Subject.id@@";
+	d2rq:class univ:Subject;
+	d2rq:classDefinitionLabel "Subject";
+	.
+map:Subject_description a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:Subject;
+	d2rq:property univ:description;
+	d2rq:propertyDefinitionLabel "Subject description";
+	d2rq:column "Subject.description";
+	.
+map:Subject_name a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:Subject;
+	d2rq:property rdfs:label;
+	d2rq:propertyDefinitionLabel "Subject name";
+	d2rq:column "Subject.name";
+	.
+
+# Table Subject_Studyprogram (n:m)
+map:Subject_Studyprogram__link a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:Subject;
+	d2rq:property univ:study_program;
+	d2rq:refersToClassMap map:Studyprogram;
+	d2rq:join "Subject_Studyprogram.Subject_id => Subject.id";
+	d2rq:join "Subject_Studyprogram.studyPrograms_id => Studyprogram.id";
+	.
+
+# Table Course
+map:Course a d2rq:ClassMap;
+	d2rq:dataStorage map:database;
+	d2rq:uriPattern "Course/@@Course.id@@";
+	d2rq:class univ:Course;
+	d2rq:classDefinitionLabel "Course";
+	.
+map:Course__label a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:Course;
+	d2rq:property rdfs:label;
+	d2rq:pattern "Course #@@Course.id@@";
+	.
+map:Course_year a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:Course;
+	d2rq:property univ:year;
+	d2rq:propertyDefinitionLabel "Course year";
+	d2rq:column "Course.year";
+	.
+map:Course_professor_id__ref a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:Course;
+	d2rq:property univ:has_professor;
+	d2rq:refersToClassMap map:User;
+	d2rq:join "Course.professor_id => User.id";
+	.
+map:Course_subject_id__ref a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:Course;
+	d2rq:property univ:subject;
+	d2rq:refersToClassMap map:Subject;
+	d2rq:join "Course.subject_id => Subject.id";
+	.
+
+
+
+
+# Table Grade
+map:Grade a d2rq:ClassMap;
+	d2rq:dataStorage map:database;
+	d2rq:uriPattern "Grade/@@Grade.id@@";
+	d2rq:class univ:Grade;
+	d2rq:classDefinitionLabel "Grade";
+	.
+map:Grade__label a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:Grade;
+	d2rq:property rdfs:label;
+	d2rq:pattern "Grade #@@Grade.id@@";
+	.
+map:Grade_grade a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:Grade;
+	d2rq:property univ:grade_value;
+	d2rq:propertyDefinitionLabel "Grade grade";
+	d2rq:column "Grade.grade";
+	d2rq:datatype xsd:integer;
+	.
+map:Grade_student_id__ref a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:Grade;
+	d2rq:property univ:for_student;
+	d2rq:refersToClassMap map:User;
+	d2rq:join "Grade.student_id => User.id";
+	.
+map:Grade_course_id__ref a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:Grade;
+	d2rq:property univ:for_course;
+	d2rq:refersToClassMap map:Course;
+	d2rq:join "Grade.course_id => Course.id";
+	.
+
+
+# Table User
+map:User a d2rq:ClassMap;
+	d2rq:dataStorage map:database;
+	d2rq:uriPattern "User/@@User.id@@";
+	d2rq:class univ:User;
+	d2rq:classDefinitionLabel "User";
+	.
+map:User_name a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:User;
+	d2rq:property rdfs:label;
+	d2rq:propertyDefinitionLabel "User name";
+	d2rq:column "User.name";
+	.
+map:User_DTYPE a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:User;
+	d2rq:property univ:DTYPE;
+	d2rq:propertyDefinitionLabel "User DTYPE";
+	d2rq:column "User.DTYPE";
+	.
+map:User_email a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:User;
+	d2rq:property univ:email;
+	d2rq:propertyDefinitionLabel "User email";
+	d2rq:column "User.email";
+	.
+map:User_name a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:User;
+	d2rq:property univ:name;
+	d2rq:propertyDefinitionLabel "User name";
+	d2rq:column "User.name";
+	.
+map:User_phone a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:User;
+	d2rq:property univ:phone;
+	d2rq:propertyDefinitionLabel "User phone";
+	d2rq:column "User.phone";
+	.
+map:User_studyprogram_id__ref a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:User;
+	d2rq:property univ:enrolled_in;
+	d2rq:refersToClassMap map:Studyprogram;
+	d2rq:join "User.studyprogram_id => Studyprogram.id";
+	.
+map:User_faculty_id__ref a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:User;
+	d2rq:property univ:works_at;
+	d2rq:refersToClassMap map:Faculty;
+	d2rq:join "User.faculty_id => Faculty.id";
+	.
+
