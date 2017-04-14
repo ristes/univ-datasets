@@ -11,11 +11,12 @@ import java.util.List;
  */
 public class FacultyFactory {
 
-    private FacultyFactory(){};
+    private FacultyFactory(){}
 
     public static Faculty make() {
         Faculty faculty = new Faculty();
         faculty.setName(RandomStringUtils.randomAlphabetic(5,15));
+        faculty.setNetworkAddress("10.10.10.10");
         return faculty;
     }
 

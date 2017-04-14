@@ -2,7 +2,6 @@ package mk.ukim.finki.univds.generator.factories;
 
 import mk.ukim.finki.univds.domain.User;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.RandomUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +13,8 @@ public class UserFactory {
 
   public static final String PROFESSOR_TYPE = "Professor";
   public static final String STUDENT_TYPE = "Student";
+  public static final String TECHNICAL_STAFF_TYPE = "TechnicalStaff";
+  public static final String SUPER_ADMINISTRATOR_TYPE = "SuperAdministrator";
 
   private UserFactory() {
   }

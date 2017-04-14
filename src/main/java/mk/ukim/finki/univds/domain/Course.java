@@ -9,9 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -33,6 +31,7 @@ public class Course extends BaseEntity {
     private Subject subject;
 
     @ManyToMany
-    List<User> students =new ArrayList<>();
+    @JoinTable
+    private Set<User> students = new HashSet<>();
 
 }
