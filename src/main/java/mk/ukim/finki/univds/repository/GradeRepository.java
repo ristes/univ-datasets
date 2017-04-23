@@ -5,5 +5,6 @@ import mk.ukim.finki.univds.domain.Grade;
 /**
  * Created by KarateKid on 04.2.2017.
  */
-public interface GradeRepository extends JpaSpecificationRepository<Grade>{
+public interface GradeRepository {
+  void save(Grade grade);
 }

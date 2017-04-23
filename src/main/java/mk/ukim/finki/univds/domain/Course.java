@@ -2,8 +2,6 @@ package mk.ukim.finki.univds.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import thewebsemantic.Namespace;
-import thewebsemantic.RdfProperty;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinTable;
@@ -18,13 +16,11 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@Namespace("http://univ#")
 public class Course extends BaseEntity {
 
     private String year;
 
     @ManyToOne
-    @RdfProperty("http://univ#has_professor")
     private User professor;
 
     @ManyToOne

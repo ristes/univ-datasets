@@ -15,7 +15,6 @@ import javax.persistence.ManyToOne;
 @Entity
 @Getter
 @Setter
-@Namespace("http://univ#")
 public class User extends BaseEntity {
 
     @Column(length = 31)
@@ -28,11 +27,27 @@ public class User extends BaseEntity {
     private String phone;
 
     @ManyToOne
-    @RdfProperty("http://univ#works_at")
     private Faculty faculty;
 
     @ManyToOne
-    @RdfProperty("http://univ#enrolled_at")
+
     private StudyProgram studyProgram;
 
+    public static Long nextStudentId() {
+
+    }
+
+
+    public static Long nextStaffId() {
+
+    }
+
+
+    public static void setBaseStudentId(Long base) {
+
+    }
+
+    public static void setBaseStaffId(Long base) {
+
+    }
 }
