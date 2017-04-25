@@ -2,8 +2,6 @@ package mk.ukim.finki.univds.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import thewebsemantic.Namespace;
-import thewebsemantic.RdfProperty;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +14,10 @@ import javax.persistence.ManyToOne;
 @Getter
 @Setter
 public class User extends BaseEntity {
+
+    public static final String RDF_INSTANCE = "http://univ/User";
+
+    private static long idSequence = 0;
 
     @Column(length = 31)
     private String DTYPE;
@@ -33,21 +35,27 @@ public class User extends BaseEntity {
 
     private StudyProgram studyProgram;
 
-    public static Long nextStudentId() {
-
+    @Override
+    public String getInstanceIRI() {
+        if (id == null) {
+            throw new RuntimeException("Cannot retrieve "
+                    + getClass().getCanonicalName()
+                    + " as semantic instance when id is null.");
+        }
+        return RDF_INSTANCE + "/" + getId();
     }
 
-
-    public static Long nextStaffId() {
-
+    public static synchronized Long nextId() {
+        idSequence++;
+        return idSequence;
     }
 
-
-    public static void setBaseStudentId(Long base) {
-
-    }
-
-    public static void setBaseStaffId(Long base) {
-
-    }
+//
+//    public static void setBaseStudentId(Long base) {
+//
+//    }
+//
+//    public static void setBaseStaffId(Long base) {
+//
+//    }
 }

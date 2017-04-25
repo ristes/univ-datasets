@@ -5,10 +5,12 @@ import mk.ukim.finki.univds.domain.StudyProgram;
 import mk.ukim.finki.univds.repository.GradeRepository;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Riste Stojanov
  */
+@Component
 public class GradeRepositoryImpl implements GradeRepository {
 
   @Override
@@ -18,28 +20,32 @@ public class GradeRepositoryImpl implements GradeRepository {
 
     StudyProgram sp = grade.getStudent().getStudyProgram();
 
-    Model m = ModelHolder.getDataSource().getNamedModel(Univ.StudyProgram + "/" + sp.getId());
+    Model defaultModel = ModelHolder.getDefaultModel();
+    Model studyProgramNamedGraph = ModelHolder.getNamedGraph(sp.getInstanceIRI());
 
-    Resource instance = Univ.createInstance(m, Univ.Grade, grade);
+    saveInstance(defaultModel, defaultModel, grade);
+    saveInstance(studyProgramNamedGraph, defaultModel, grade);
 
-    m.add(
-      instance,
-      Univ.for_student,
-      Univ.getInstance(m, Univ.User, grade.getStudent())
-    );
+  }
 
-
-    m.add(
-      instance,
-      Univ.has_course,
-      Univ.getInstance(m, Univ.Course, grade.getCourse())
-    );
-
+  private Resource saveInstance(Model m, Model defaultModel, Grade grade) {
+    Resource instance = Univ.createInstance(m, Univ.GradeResource, grade);
 
     m.add(
-      instance,
-      Univ.grade_value,
-      grade.getGrade() + ""
+            instance,
+            Univ.for_course,
+            Univ.getInstance(defaultModel, Univ.CourseResource, grade.getCourse())
     );
+    m.add(
+            instance,
+            Univ.for_student,
+            Univ.getInstance(defaultModel, Univ.UserResource, grade.getStudent())
+    );
+
+    m.add(instance, Univ.grade_value, grade.getGrade().toString());
+
+
+    return instance;
+
   }
 }

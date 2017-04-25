@@ -1,7 +1,7 @@
 package mk.ukim.finki.univds.repository.impl;
 
 
-import mk.ukim.finki.univds.domain.StudyProgram;
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.rdf.model.Model;
@@ -17,45 +17,49 @@ public class ModelHolder {
   public static Dataset getDataSource() {
     if (dataSet == null) {
       dataSet = createDatasource();
-      initializeResources();
+      Univ.init(dataSet.getDefaultModel());
     }
     return dataSet;
   }
 
-  private static void initializeResources() {
-    Model m = dataSet.getDefaultModel();
-    m.createResource(StudyProgram.CLASS);
-
-    m.createProperty(StudyProgram._NAME);
-    m.createResource(StudyProgram._FACULTY);
-
+  public static Dataset resetDataSource() {
+    Model defaultModel = getDataSource().getDefaultModel();
+    dataSet = null;
+    dataSet = getDataSource();
+    dataSet.setDefaultModel(defaultModel);
+    return dataSet;
   }
 
   private static Dataset createDatasource() {
     return DatasetFactory.create();
-
   }
 
 
   public static void loadModel(String file) {
-
+    throw new NotImplementedException("@TODO: method not implemented");
   }
 
   public static Model getDefaultModel() {
-    return dataSet.getDefaultModel();
+    return getDataSource().getDefaultModel();
   }
 
-  public static Model createNamedModel(String modelUri) {
-    Model namedModel = createModel();
+  public static Model getNamedGraph(String iri) { return getDataSource().getNamedModel(iri); }
+
+  public static Model createNamedModel(String modelUri, Model namedModel) {
     getDataSource().addNamedModel(modelUri, namedModel);
     return namedModel;
   }
 
-  private static Model createModel() {
+  public static Model createModel() {
     return ModelFactory.createDefaultModel();
   }
 
+  public static boolean containsResource(Model m, String iri) {
+    return m.containsResource(Univ.getInstance(m, iri));
+  }
 
-
-
+  public static boolean containsResourceInDefaultModel(String iri) {
+    Model defaultModel = getDataSource().getDefaultModel();
+    return defaultModel.containsResource(Univ.getInstance(defaultModel, iri));
+  }
 }

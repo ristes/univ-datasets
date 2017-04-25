@@ -14,7 +14,9 @@ import javax.persistence.ManyToOne;
 @Setter
 public class Grade extends BaseEntity {
 
-  private static Long idSequence;
+  public static final String RDF_INSTANCE = "http://univ/Grade";
+
+  private static long idSequence = 0;
 
   private Integer grade;
 
@@ -29,5 +31,15 @@ public class Grade extends BaseEntity {
     idSequence++;
     return idSequence;
 
+  }
+
+  @Override
+  public String getInstanceIRI() {
+    if (id == null) {
+      throw new RuntimeException("Cannot retrieve "
+              + getClass().getCanonicalName()
+              + " as semantic instance when id is null.");
+    }
+    return RDF_INSTANCE + "/" + getId();
   }
 }

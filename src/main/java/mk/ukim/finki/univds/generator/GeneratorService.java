@@ -12,6 +12,8 @@ import mk.ukim.finki.univds.repository.FacultyRepository;
 import mk.ukim.finki.univds.repository.StudyprogramRepository;
 import mk.ukim.finki.univds.repository.SubjectRepository;
 import mk.ukim.finki.univds.repository.UserRepository;
+import mk.ukim.finki.univds.repository.impl.StaffRepositoryImpl;
+import mk.ukim.finki.univds.repository.impl.Univ;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,45 +38,53 @@ public class GeneratorService {
     private SubjectRepository subjectRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private StaffRepositoryImpl staffRepository;
+//    private UserRepository userRepository;
 
     @Autowired
     private ControlledDatasourceGenerator datasourceGenerator;
 
-    public void generate(int generatorIterations) {
+    /**
+     * .
+     * @param generatorIterations .
+     * @return the faculty that will be reused in all other data generations.
+     */
+    public Faculty generate(int generatorIterations) {
 
-        List<Faculty> faculties = facultyRepository.findAll();
+//        List<Faculty> faculties = facultyRepository.findAll();
 
         // there should always be 1 faculty.
-        if (faculties.isEmpty()) {
-            Faculty faculty = FacultyFactory.make();
-            faculties.add(faculty);
-            facultyRepository.save(faculties);
+        // commented out for convenience. ideally should be present.
+//        if (faculties.isEmpty()) {
+        Faculty faculty = FacultyFactory.make();
+        facultyRepository.save(faculty);
 
-            User superAdministrator = UserFactory.make(UserFactory.SUPER_ADMINISTRATOR_TYPE);
-            superAdministrator.setFaculty(faculty);
-            userRepository.save(superAdministrator);
+        User superAdministrator = UserFactory.make(UserFactory.SUPER_ADMINISTRATOR_TYPE);
+        superAdministrator.setFaculty(faculty);
+        staffRepository.save(superAdministrator);
 
-            List<User> technicalStaff = UserFactory.make(10, UserFactory.TECHNICAL_STAFF_TYPE);
-            technicalStaff.forEach(technicalStaffPerson -> technicalStaffPerson.setFaculty(faculty));
-            userRepository.save(technicalStaff);
-        }
+        List<User> technicalStaff = UserFactory.make(10, UserFactory.TECHNICAL_STAFF_TYPE);
+        technicalStaff.forEach(technicalStaffPerson -> technicalStaffPerson.setFaculty(faculty));
+        staffRepository.save(technicalStaff);
+//        }
 
         // each application start should have its own study program where all relations will be added
         StudyProgram studyProgram = StudyprogramFactory.make();
-        studyProgram.setFaculty(faculties.get(0));
+        studyProgram.setFaculty(faculty);
         studyProgramRepository.save(studyProgram);
 
         createGradeCourseRelations(studyProgram, generatorIterations);
 
         createGradeCourseProfAndSubjectRelations(studyProgram, generatorIterations);
+
+        return faculty;
     }
 
     private void createGradeCourseRelations(StudyProgram studyProgram, int generatorIterations) {
         // generate professors
         User professor = UserFactory.make(UserFactory.PROFESSOR_TYPE);
         professor.setFaculty(studyProgram.getFaculty());
-        userRepository.save(professor);
+        staffRepository.save(professor);
 
         // generate subjects
         Subject subject = SubjectFactory.make();
@@ -116,7 +126,7 @@ public class GeneratorService {
             // generate professors
             User professor = UserFactory.make(UserFactory.PROFESSOR_TYPE);
             professor.setFaculty(studyProgram.getFaculty());
-            userRepository.save(professor);
+            staffRepository.save(professor);
 
             // generate subjects
             Subject subject = SubjectFactory.make();

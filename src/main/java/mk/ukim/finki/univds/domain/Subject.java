@@ -2,8 +2,6 @@ package mk.ukim.finki.univds.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import thewebsemantic.Namespace;
-import thewebsemantic.RdfProperty;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinTable;
@@ -17,16 +15,32 @@ import java.util.Set;
 @Entity
 @Setter
 @Getter
-@Namespace("http://univ#")
 public class Subject extends BaseEntity{
+
+    public static final String RDF_INSTANCE = "http://univ/Subject";
+
+    private static long idSequence = 0;
 
     private String description;
 
-    @RdfProperty("http://www.w3.org/2000/01/rdf-schema#label")
     private String name;
 
     @ManyToMany
     @JoinTable
     private Set<StudyProgram> studyPrograms  = new HashSet<>();
 
+    @Override
+    public String getInstanceIRI() {
+        if (id == null) {
+            throw new RuntimeException("Cannot retrieve "
+                    + getClass().getCanonicalName()
+                    + " as semantic instance when id is null.");
+        }
+        return RDF_INSTANCE + "/" + getId();
+    }
+
+    public static synchronized Long nextId() {
+        idSequence++;
+        return idSequence;
+    }
 }

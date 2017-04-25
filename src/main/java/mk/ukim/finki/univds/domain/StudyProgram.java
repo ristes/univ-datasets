@@ -14,11 +14,10 @@ import javax.persistence.ManyToOne;
 @Setter
 public class StudyProgram extends BaseEntity {
 
-  public static String CLASS = "http://univ/StudyProgram";
-  public static String INSTANCE = "http://univ/StudyProgram/%d";
-  public static String _NAME = "http://www.w3.org/2000/01/rdf-schema#label";
-  public static String _FACULTY = "http://univ/faculty";
+  public static final String RDF_INSTANCE = "http://univ/StudyProgram";
+
   private static long idSequence = 0;
+
   private String name;
 
   @ManyToOne
@@ -27,5 +26,15 @@ public class StudyProgram extends BaseEntity {
   public static synchronized Long nextId() {
     idSequence++;
     return idSequence;
+  }
+
+  @Override
+  public String getInstanceIRI() {
+    if (id == null) {
+      throw new RuntimeException("Cannot retrieve "
+              + getClass().getCanonicalName()
+              + " as semantic instance when id is null.");
+    }
+    return RDF_INSTANCE + "/" + getId();
   }
 }

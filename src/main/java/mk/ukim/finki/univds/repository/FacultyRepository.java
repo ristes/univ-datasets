@@ -12,4 +12,6 @@ public interface FacultyRepository {
 
 
   void save(List<Faculty> faculties);
+
+  void save(Faculty faculties);
 }

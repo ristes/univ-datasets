@@ -15,7 +15,7 @@ import javax.persistence.MappedSuperclass;
  * 
  */
 @MappedSuperclass
-public class BaseEntity {
+public abstract class BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	protected Long id;
@@ -53,4 +53,6 @@ public class BaseEntity {
 		return this.id != null ? (this.getClass() + "-" + this.id).hashCode()
 				: super.hashCode();
 	}
+
+	public abstract String getInstanceIRI();
 }

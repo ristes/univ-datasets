@@ -2,9 +2,6 @@ package mk.ukim.finki.univds.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import thewebsemantic.Namespace;
-import thewebsemantic.RdfProperty;
-import thewebsemantic.vocabulary.DublinCore;
 
 import javax.persistence.Entity;
 
@@ -14,12 +11,28 @@ import javax.persistence.Entity;
 @Entity
 @Getter
 @Setter
-@Namespace("http://univ#")
 public class Faculty extends BaseEntity {
 
-    @RdfProperty("http://www.w3.org/2000/01/rdf-schema#label")
+    public static final String RDF_INSTANCE = "http://univ/Faculty";
+
+    private static long idSequence = 0;
+
     private String name;
 
     private String networkAddress;
 
+    @Override
+    public String getInstanceIRI() {
+        if (id == null) {
+            throw new RuntimeException("Cannot retrieve "
+                    + getClass().getCanonicalName()
+                    + " as semantic instance when id is null.");
+        }
+        return RDF_INSTANCE + "/" + getId();
+    }
+
+    public static synchronized Long nextId() {
+        idSequence++;
+        return idSequence;
+    }
 }

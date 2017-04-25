@@ -7,6 +7,7 @@ import mk.ukim.finki.univds.generator.factories.UserFactory;
 import mk.ukim.finki.univds.repository.CourseRepository;
 import mk.ukim.finki.univds.repository.GradeRepository;
 import mk.ukim.finki.univds.repository.UserRepository;
+import mk.ukim.finki.univds.repository.impl.StudentRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Service;
 public class ControlledDatasourceGenerator {
 
     @Autowired
-    private UserRepository userRepository;
+    private StudentRepositoryImpl studentRepository;
 
     @Autowired
     private CourseRepository courseRepository;
@@ -39,7 +40,7 @@ public class ControlledDatasourceGenerator {
             // generate students
             User student = UserFactory.make(UserFactory.STUDENT_TYPE);
             student.setStudyProgram(studyProgram);
-            userRepository.save(student);
+            studentRepository.save(student);
 
             // add students to courses
             course.getStudents().add(student);

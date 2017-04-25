@@ -4,9 +4,11 @@ import mk.ukim.finki.univds.domain.*;
 import mk.ukim.finki.univds.generator.factories.*;
 import mk.ukim.finki.univds.repository.*;
 import org.apache.commons.lang3.RandomUtils;
+import org.apache.jena.ext.com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -30,7 +32,12 @@ public class DatasourceGenerator {
   private SubjectRepository subjectRepository;
 
   @Autowired
-  private UserRepository userRepository;
+  @Qualifier("staffRepository")
+  private UserRepository staffRepository;
+
+  @Autowired
+  @Qualifier("studentRepository")
+  private UserRepository studentRepository;
 
   @Autowired
   private CourseRepository courseRepository;
@@ -85,23 +92,37 @@ public class DatasourceGenerator {
 //    - profesor + student  100 + 100000 1000 * factor    base * (multiplyer^3) * factor
 //    - course 			    10000        10000 * factor   base * (multiplyer^4) * factor
 //    - grade				1000000      100000 * factor  base * (multiplyer^5) * factor
-  public void generateData(double base, double multiplier, double factor) {
+  public void generateData(double base, double multiplier, double factor,
+                           Faculty faculty, StudyProgram studyProgram) {
     Integer multiplierFactor = 0;
 
     //generate faculties
     int numEntities = nextEntitiesCount(base, multiplier, factor, multiplierFactor);
     multiplierFactor++;
-    List<Faculty> faculties = FacultyFactory.make(numEntities);
-    log.info("{} number of Faculties created. Starting to save the collection", numEntities);
-    facultyRepository.save(faculties);
-    log.info("Collection is saved.", numEntities);
+    List<Faculty> faculties = Lists.newArrayList();;
+    if(faculty == null) {
+      faculties = FacultyFactory.make(numEntities);
+      log.info("{} number of Faculties created. Starting to save the collection", numEntities);
+      facultyRepository.save(faculties);
+      log.info("Collection is saved.", numEntities);
+    } else {
+      faculties.add(faculty);
+    }
+
 
     // generate StudyPrograms
     numEntities = nextEntitiesCount(base, multiplier, factor, multiplierFactor);
     multiplierFactor++;
-    List<StudyProgram> StudyPrograms = StudyprogramFactory.make(numEntities);
-    log.info("{} number of StudyProgram created. Now pairing with Faculty", numEntities);
-    pairStudyProgramAndFaculty(StudyPrograms, faculties);
+    List<StudyProgram> studyPrograms = Lists.newArrayList();
+    if(studyProgram == null){
+      studyPrograms = StudyprogramFactory.make(numEntities);
+      log.info("{} number of StudyProgram created. Now pairing with faculties", numEntities);
+      pairStudyProgramAndFaculty(studyPrograms, faculties);
+    } else {
+      studyPrograms.add(studyProgram);
+    }
+
+
 
     // generate professors
     numEntities = nextEntitiesCount(base, multiplier, factor, multiplierFactor);
@@ -115,7 +136,7 @@ public class DatasourceGenerator {
     multiplierFactor++;
     List<Subject> subjects = SubjectFactory.make(numEntities);
     log.info("{} number of Subjects created. Now pairing with StudyProgram", numEntities);
-    pairSubjectAndStudyProgram(subjects, StudyPrograms);
+    pairSubjectAndStudyProgram(subjects, studyPrograms);
 
     // generate courses
     numEntities = nextEntitiesCount(base, multiplier, factor, multiplierFactor);
@@ -129,7 +150,7 @@ public class DatasourceGenerator {
     multiplierFactor++;
     List<User> students = UserFactory.make(numEntities, UserFactory.STUDENT_TYPE);
     log.info("{} number of Students created. Now pairing with Study programs", numEntities);
-    pairStudentsWithStudyProgram(students, StudyPrograms);
+    pairStudentsWithStudyProgram(students, studyPrograms);
 
     // add students to courses
     log.info("Students now pairing with Courses");
@@ -159,14 +180,14 @@ public class DatasourceGenerator {
     log.info("Pairing done. Saved {} entities.", studyPrograms.size());
   }
 
-  private void pairSubjectAndStudyProgram(List<Subject> subjects, List<StudyProgram> StudyPrograms) {
+  private void pairSubjectAndStudyProgram(List<Subject> subjects, List<StudyProgram> studyPrograms) {
     // relation is @ManyToMany, any subject can belong to multiple study programs
     for (Subject subject : subjects) {
-      int numberStudyProgramsToPair = RandomUtils.nextInt(1, StudyPrograms.size());
+      int numberStudyProgramsToPair = RandomUtils.nextInt(1, studyPrograms.size());
       for (int i = 0; i < numberStudyProgramsToPair; i++) {
-        int randomStudyProgramIndex = RandomUtils.nextInt(0, StudyPrograms.size());
-        StudyProgram StudyProgram = StudyPrograms.get(randomStudyProgramIndex);
-        subject.getStudyPrograms().add(StudyProgram);
+        int randomStudyProgramIndex = RandomUtils.nextInt(0, studyPrograms.size());
+        StudyProgram studyProgram = studyPrograms.get(randomStudyProgramIndex);
+        subject.getStudyPrograms().add(studyProgram);
       }
       subjectRepository.save(subject);
     }
@@ -182,7 +203,7 @@ public class DatasourceGenerator {
       Faculty faculty = faculties.get(randomFacultyIndex);
       // pair them
       professor.setFaculty(faculty);
-      userRepository.save(professor);
+      staffRepository.save(professor);
     }
     log.info("Pairing done. Saved {} entities", professors.size());
   }
@@ -212,7 +233,7 @@ public class DatasourceGenerator {
       course.setProfessor(professor);
       course.setSubject(subject);
       coursesFilled++;
-      courseRepository.save(course);
+//      courseRepository.save(course);
     }
 
     // For the rest of the courses, iterate over random professors and assign subject
@@ -238,7 +259,7 @@ public class DatasourceGenerator {
       Course course = courses.get(i);
       course.setProfessor(professor);
       course.setSubject(subject);
-      courseRepository.save(course);
+//      courseRepository.save(course);
     }
     log.info("Pairing done. Saved {} entities", courses.size());
   }
@@ -252,7 +273,7 @@ public class DatasourceGenerator {
       StudyProgram StudyProgram = StudyPrograms.get(randomStudyProgramIndex);
       // pair them
       student.setStudyProgram(StudyProgram);
-      userRepository.save(student);
+      studentRepository.save(student);
     }
     log.info("Pairing done. Saved {} entities", students.size());
   }
