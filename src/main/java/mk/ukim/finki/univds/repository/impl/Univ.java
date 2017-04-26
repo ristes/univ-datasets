@@ -4,6 +4,8 @@ import mk.ukim.finki.univds.domain.*;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.RDFS;
 
 /**
  * @author Riste Stojanov
@@ -57,9 +59,9 @@ public class Univ {
     CourseResource = m.createResource(Course.RDF_INSTANCE);
     GradeResource = m.createResource(Grade.RDF_INSTANCE);
 
-    rdfLabel = m.createProperty("http://www.w3.org/2000/01/rdf-schema#label");
+    rdfLabel = RDFS.label;
 
-    rdfType = m.createProperty("http://www.w3.org/2000/01/rdf-schema#type");
+    rdfType = RDF.type;
     faculty = m.createProperty("http://univ/faculty");
     name = m.createProperty("http://univ/name");
     networkAddress = m.createProperty("http://univ/networkAddress");

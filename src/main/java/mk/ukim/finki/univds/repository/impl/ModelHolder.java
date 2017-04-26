@@ -1,11 +1,12 @@
 package mk.ukim.finki.univds.repository.impl;
 
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.jena.query.Dataset;
-import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.tdb.TDBFactory;
+
+import java.io.File;
 
 /**
  * @author Riste Stojanov
@@ -16,34 +17,46 @@ public class ModelHolder {
 
   public static Dataset getDataSource() {
     if (dataSet == null) {
-      dataSet = createDatasource();
-      Univ.init(dataSet.getDefaultModel());
+      throw new IllegalStateException("Create or reset dataset first!");
     }
     return dataSet;
   }
 
-  public static Dataset resetDataSource() {
+
+  public static Dataset resetDataset(String name) {
     Model defaultModel = getDataSource().getDefaultModel();
-    dataSet = null;
-    dataSet = getDataSource();
-    dataSet.setDefaultModel(defaultModel);
+    Dataset old = dataSet;
+    dataSet = createDataset(name);
+    dataSet.getDefaultModel().add(defaultModel);
+    old.close();
     return dataSet;
   }
 
-  private static Dataset createDatasource() {
-    return DatasetFactory.create();
+  public static Dataset createInitialDataset(String name) {
+    dataSet = createDataset(name);
+    Univ.init(dataSet.getDefaultModel());
+    return dataSet;
   }
 
-
-  public static void loadModel(String file) {
-    throw new NotImplementedException("@TODO: method not implemented");
+  private static Dataset createDataset(String name) {
+    // Make a TDB-backed dataset
+    String directory = "ds/tdb/" + name;
+    File f=new File(directory);
+    if(!f.exists()) {
+      f.mkdirs();
+    }
+    dataSet = TDBFactory.createDataset(directory);
+    return dataSet;
   }
+
 
   public static Model getDefaultModel() {
     return getDataSource().getDefaultModel();
   }
 
-  public static Model getNamedGraph(String iri) { return getDataSource().getNamedModel(iri); }
+  public static Model getNamedGraph(String iri) {
+    return getDataSource().getNamedModel(iri);
+  }
 
   public static Model createNamedModel(String modelUri, Model namedModel) {
     getDataSource().addNamedModel(modelUri, namedModel);

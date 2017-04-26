@@ -39,12 +39,14 @@ public class ConsoleApplicationRunner implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         logger.info("application started with {} iteration cycles" + args[0]);
+
+        ModelHolder.createInitialDataset("ds0");
         int generatorCycles = Integer.parseInt(args[0]);
         Faculty faculty = generatorService.generate(generatorCycles);
         System.out.println("DS0 coming up!");
         print(System.out);
 
-        ModelHolder.resetDataSource();
+        ModelHolder.resetDataset("ds1");
 
         StudyProgram studyProgram = StudyprogramFactory.make();
         studyProgram.setFaculty(faculty);

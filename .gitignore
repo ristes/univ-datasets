@@ -8,3 +8,6 @@ target/
 /ds/data/ds*.nt
 
 /ds/data/ds*.pl
+
+ds/data/ds1.dlog
+ds/tdb/
