@@ -1,12 +1,7 @@
 package mk.ukim.finki.univds;
 
-import mk.ukim.finki.univds.domain.Faculty;
-import mk.ukim.finki.univds.domain.StudyProgram;
-import mk.ukim.finki.univds.generator.DatasourceGenerator;
-import mk.ukim.finki.univds.generator.GeneratorService;
-import mk.ukim.finki.univds.generator.factories.StudyprogramFactory;
-import mk.ukim.finki.univds.repository.StudyprogramRepository;
-import mk.ukim.finki.univds.repository.impl.ModelHolder;
+import java.io.OutputStream;
+
 import org.apache.jena.query.Dataset;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.Lang;
@@ -17,7 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.io.OutputStream;
+import mk.ukim.finki.univds.domain.Faculty;
+import mk.ukim.finki.univds.domain.StudyProgram;
+import mk.ukim.finki.univds.generator.DatasourceGenerator;
+import mk.ukim.finki.univds.generator.GeneratorService;
+import mk.ukim.finki.univds.generator.factories.StudyprogramFactory;
+import mk.ukim.finki.univds.repository.StudyprogramRepository;
+import mk.ukim.finki.univds.repository.impl.ModelHolder;
 
 /**
  * Runs spring console application.
@@ -43,24 +44,20 @@ public class ConsoleApplicationRunner implements CommandLineRunner {
         ModelHolder.createInitialDataset("ds0");
         int generatorCycles = Integer.parseInt(args[0]);
         Faculty faculty = generatorService.generate(generatorCycles);
-        System.out.println("DS0 coming up!");
-        print(System.out);
 
-        ModelHolder.resetDataset("ds1");
+        for (int i = 1; i <= 6; i++) {
+            logger.info("=============== Dataset {} now generating", i);
+            ModelHolder.resetDataset("ds" + i);
+            StudyProgram studyProgram = StudyprogramFactory.make();
+            studyProgram.setFaculty(faculty);
+            studyProgramRepository.save(studyProgram);
+            noiceDatasourceGenerator.generateData(1,10, i, faculty, studyProgram);
+        }
 
-        StudyProgram studyProgram = StudyprogramFactory.make();
-        studyProgram.setFaculty(faculty);
-        studyProgramRepository.save(studyProgram);
+        // just to flush the last dataset.
+        ModelHolder.resetDataset("ds"+1);
 
-        noiceDatasourceGenerator.generateData(1,1,1, faculty, studyProgram);
-
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println("DS1 coming up!");
-        print(System.out);
-
-        logger.info("I am done!");
+        logger.info("======== I am done!");
     }
 
     private void print(OutputStream outputStream) {
