@@ -4,7 +4,10 @@ package mk.ukim.finki.univds.repository.impl;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.tdb.TDBFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
@@ -12,6 +15,9 @@ import java.io.File;
  * @author Riste Stojanov
  */
 public class ModelHolder {
+
+
+  private static  Logger logger = LoggerFactory.getLogger(ModelHolder.class);
 
   private static Dataset dataSet;
 
@@ -27,8 +33,15 @@ public class ModelHolder {
     Model defaultModel = getDataSource().getDefaultModel();
     Dataset old = dataSet;
     dataSet = createDataset(name);
-    dataSet.getDefaultModel().add(defaultModel);
+    logger.info("listing statements");
+    StmtIterator iter = defaultModel.listStatements();
+    logger.info("adding statements");
+    while (iter.hasNext()) {
+      dataSet.getDefaultModel().add(iter.nextStatement());
+    }
+    logger.info("closing old dataset");
     old.close();
+    logger.info("closed old dataset");
     return dataSet;
   }
 
