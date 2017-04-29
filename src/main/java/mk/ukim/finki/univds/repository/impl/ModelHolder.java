@@ -17,7 +17,7 @@ import java.io.File;
 public class ModelHolder {
 
 
-  private static  Logger logger = LoggerFactory.getLogger(ModelHolder.class);
+  private static Logger logger = LoggerFactory.getLogger(ModelHolder.class);
 
   private static Dataset dataSet;
 
@@ -32,7 +32,7 @@ public class ModelHolder {
   public static Dataset resetDataset(String name) {
     Model defaultModel = getDataSource().getDefaultModel();
     Dataset old = dataSet;
-    dataSet = createDataset(name);
+    dataSet = openDataset(name);
     logger.info("listing statements");
     StmtIterator iter = defaultModel.listStatements();
     logger.info("adding statements");
@@ -42,20 +42,23 @@ public class ModelHolder {
     logger.info("closing old dataset");
     old.close();
     logger.info("closed old dataset");
+    dataSet.close();
+    //reopen it for memory leakage prevention
+    dataSet = openDataset(name);
     return dataSet;
   }
 
   public static Dataset createInitialDataset(String name) {
-    dataSet = createDataset(name);
+    dataSet = openDataset(name);
     Univ.init(dataSet.getDefaultModel());
     return dataSet;
   }
 
-  private static Dataset createDataset(String name) {
+  public static Dataset openDataset(String name) {
     // Make a TDB-backed dataset
     String directory = "ds/tdb/" + name;
-    File f=new File(directory);
-    if(!f.exists()) {
+    File f = new File(directory);
+    if (!f.exists()) {
       f.mkdirs();
     }
     dataSet = TDBFactory.createDataset(directory);
