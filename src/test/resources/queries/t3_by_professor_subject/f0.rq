@@ -1,0 +1,8 @@
+WHERE {
+	GRAPH <gIRI> {
+	    ?g univ:for_course ?c.
+    	?c univ:has_professor <pIRI>.
+    	?c univ:subject <sIRI>.
+    	?g ?p ?o
+	}
+}

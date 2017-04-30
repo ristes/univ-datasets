@@ -1,0 +1,29 @@
+PREFIX univ: <http://univ/>
+PREFIX usr: <http://univ/User/>
+PREFIX sp: <http://univ/StydyProgram/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+construct {
+	?u ?p ?o
+}
+where {
+
+	
+	{
+		?u rdfs:type  univ:Course
+	}
+	?u ?p ?o
+
+}
+
+
+#	FILTER EXISTS {
+#		{ ?u ?y "auWmFyvfsK@email.com" }
+#		UNION
+#		{ ?u ?v "CrFXX" }
+#	}
+
+
+#	FILTER NOT EXISTS {
+#		?u <http://univ/DTYPE> "Professor"
+#	}

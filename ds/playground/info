@@ -1,0 +1,7 @@
+TypedVar
+	- name		:String
+	- range		:OwlClass[]
+	- element	:Element
+
+- Granicno mapiranje (triple) => (Optional ( triple (filter_[not]_exist (policy))))
+- Celosno mapiranje (bgp) => 

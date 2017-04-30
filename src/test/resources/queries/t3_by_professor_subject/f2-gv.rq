@@ -1,0 +1,9 @@
+WHERE {
+	GRAPH ?gr {
+	    ?g univ:for_course ?c.
+       	?c univ:has_professor ?prof.
+       	?c univ:subject ?subj.
+       	?g ?p ?o .
+       	FILTER ( ?prof =<pIRI> && ?subj=<sIRI> )
+	}
+}

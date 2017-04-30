@@ -36,7 +36,7 @@ public class Measurement {
   }
 
   public void print(String name, String dataset) {
-    System.out.printf("%s\t%s\t%s\t%d\n", name, dataset, definition.getId(), duration);
+    System.out.printf("%s\tds-%s\t%s\t%d\n", name, dataset, definition.getGraph(), duration);
     reset();
   }
 

@@ -14,7 +14,6 @@ import java.util.Map;
 public class QueryDefinition {
 
   private String id;
-  private Long resultsNumber;
 
   private List<Map<String, String>> params;
 
@@ -23,5 +22,7 @@ public class QueryDefinition {
   private String insert;
 
   private String select;
+
+  private String graph;
 
 }

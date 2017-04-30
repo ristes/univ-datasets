@@ -1,0 +1,7 @@
+Select * 
+where {
+	?x ?p ?o
+	FILTER EXISTS {
+		?s  <http://univ/works_at> <http://univ/Faculty/2> 
+	}
+}

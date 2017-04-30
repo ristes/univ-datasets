@@ -55,6 +55,12 @@
             <version>3.2.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-permissions</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+
 
         <!-- Database connectors -->
         <dependency>
@@ -109,7 +115,7 @@
                     <archive>
                         <manifest>
                             <!-- Jar file entry point -->
-                            <mainClass>mk.ukim.finki.emt.Store2017Application</mainClass>
+                            <mainClass>mk.ukim.finki.univds.Application</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

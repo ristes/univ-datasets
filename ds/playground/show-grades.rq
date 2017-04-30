@@ -1,0 +1,54 @@
+PREFIX univ: <http://univ/>
+PREFIX usr: <http://univ/User/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+construct 
+{
+	?g rdfs:type univ:Grade . 
+	?g univ:for_course ?c . 
+	?g univ:for_student ?s .
+	?g univ:grade_value ?v .
+	?g ?r ?o. 
+	?c univ:has_professor ?p.
+}
+where { 
+	graph ?gr {
+			?g rdfs:type univ:Grade . 
+			?g univ:for_course ?c . 
+			?g univ:for_student ?s .
+			?g univ:grade_value ?v .
+			?g ?r ?o
+	}
+	OPTIONAL {
+		?c univ:has_professor ?p.
+
+		FILTER NOT EXISTS {
+			usr:14 rdfs:type univ:User.
+			?c univ:has_professor ?p .
+			FILTER (?p!=usr:14)
+		}
+
+	}
+	FILTER EXISTS {
+		{		# Profesorite gi gledaat ocenite povisoki od 9 ili 10
+			usr:14 rdfs:type univ:User.
+			?g rdfs:type univ:Grade . 
+			?g univ:for_course ?c . 
+			?g univ:grade_value ?v .
+			FILTER (?v="10" || ?v="9") 		
+		}
+		union
+		{	# Profesorite gi gledaat svoite oceni
+ 
+			usr:14 rdfs:type univ:User .
+			?c univ:has_professor usr:14 .
+			?g rdfs:type univ:Grade .
+			?g univ:for_course ?c
+		}
+	}
+	#FILTER (usr:14 = usr:14)
+	
+}
+
+
+
