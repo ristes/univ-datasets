@@ -44,6 +44,8 @@ public class GeneratorService {
     @Autowired
     private ControlledDatasourceGenerator datasourceGenerator;
 
+    private static long internalProfessorId = 0;
+
     /**
      * .
      * @param generatorIterations .
@@ -82,9 +84,7 @@ public class GeneratorService {
 
     private void createGradeCourseRelations(StudyProgram studyProgram, int generatorIterations) {
         // generate professors
-        User professor = UserFactory.make(UserFactory.PROFESSOR_TYPE);
-        professor.setFaculty(studyProgram.getFaculty());
-        staffRepository.save(professor);
+        User professor = createProfessor(studyProgram);
 
         // generate subjects
         Subject subject = SubjectFactory.make();
@@ -124,9 +124,7 @@ public class GeneratorService {
         for (int i = 0; i < generatorIterations; i++) {
 
             // generate professors
-            User professor = UserFactory.make(UserFactory.PROFESSOR_TYPE);
-            professor.setFaculty(studyProgram.getFaculty());
-            staffRepository.save(professor);
+            User professor = createProfessor(studyProgram);
 
             // generate subjects
             Subject subject = SubjectFactory.make();
@@ -147,5 +145,18 @@ public class GeneratorService {
         }
 
         logger.info("createGradeCourseProfAndSubjectRelations()::DONE");
+    }
+
+    private synchronized long generateInternalProfessorId(){
+        internalProfessorId ++;
+        return internalProfessorId;
+    }
+
+    private User createProfessor(StudyProgram studyProgram) {
+        User professor = UserFactory.make(UserFactory.PROFESSOR_TYPE);
+        professor.setFaculty(studyProgram.getFaculty());
+        professor.setId(generateInternalProfessorId());
+        staffRepository.save(professor);
+        return professor;
     }
 }

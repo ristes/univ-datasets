@@ -42,6 +42,7 @@ public class ConsoleApplicationRunner implements CommandLineRunner {
 
     ModelHolder.createInitialDataset("ds0");
     int generatorCycles = Integer.parseInt(args[0]);
+    logger.info("=============== Dataset {} now generating", 0);
     Faculty faculty = generatorService.generate(generatorCycles);
     int from = 1;
     int to = 6;
@@ -49,17 +50,23 @@ public class ConsoleApplicationRunner implements CommandLineRunner {
       from = Integer.parseInt(args[1]);
       ModelHolder.openDataset("ds" + from);
     }
-    for (int i = 1; i <= 6; i++) {
-      logger.info("=============== Dataset {} now generating", i);
-      ModelHolder.resetDataset("ds" + i);
+
+//    // for debugging purpose
+//    print(System.out);
+
+    for (int datasetIndex = from; datasetIndex <= to; datasetIndex++) {
+      logger.info("=============== Dataset {} now generating", datasetIndex);
+      ModelHolder.resetDataset(datasetIndex);
       StudyProgram studyProgram = StudyprogramFactory.make();
       studyProgram.setFaculty(faculty);
       studyProgramRepository.save(studyProgram);
-      noiceDatasourceGenerator.generateData(1, 10, i, faculty, studyProgram);
+      noiceDatasourceGenerator.generateData(1, 10, datasetIndex, faculty, studyProgram);
+//      // for debugging purpose
+//      print(System.out);
     }
 
     // just to flush the last dataset.
-    ModelHolder.resetDataset("ds" + 1);
+    ModelHolder.getDataSource().close();
 
     logger.info("======== I am done!");
   }

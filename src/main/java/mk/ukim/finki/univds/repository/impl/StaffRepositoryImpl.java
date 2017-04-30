@@ -20,7 +20,11 @@ public class StaffRepositoryImpl implements UserRepository {
 
     @Override
     public void save(User staff) {
-        staff.setId(User.nextId());
+
+        // this is only for ds0 generation where we want to have consecutive professor id.
+        if (staff.getId() == null){
+            staff.setId(User.nextId());
+        }
 
 //        String instanceIri = staff.getInstanceIRI();
         Model defaultModel = ModelHolder.getDefaultModel();
