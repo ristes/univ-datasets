@@ -1,7 +1,7 @@
 WHERE {
 	GRAPH <gIRI> {
-	?g univ:for_course ?c.
-	?g ?p ?o .
-	FILTER (?c = <cIRI>)
+        ?g univ:for_course ?c.
+        ?g ?p ?o .
+        FILTER (?c = <cIRI>)
 	}
 }

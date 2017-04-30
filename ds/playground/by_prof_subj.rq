@@ -1,5 +1,4 @@
 PREFIX univ: <http://univ/>
-	GRAPH <gIRI> {
 PREFIX usr: <http://univ/User/>
 PREFIX sp: <http://univ/StydyProgram/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -9,13 +8,12 @@ construct {
 }
 WHERE {
 	GRAPH ?gr {
-		?g rdfs:type univ:Grade.
+		?g  rdfs:type univ:Grade.
 	    ?g univ:for_course ?c.
     	?g ?p ?o.
 	}
-	?c rdfs:type univ:Course.
-	?prof rdfs:type univ:User.
-	?subj rdfs:type univ:Subject.
+    ?c  rdfs:type univ:Course.
+    ?prof  rdfs:type univ:User.
     ?c univ:has_professor ?prof.
     ?c univ:subject ?subj.
 }

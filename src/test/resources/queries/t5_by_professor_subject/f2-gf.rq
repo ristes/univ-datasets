@@ -1,12 +1,11 @@
 WHERE {
 	GRAPH ?gr {
-		?g a univ:Grade.
-		?c a univ:Curse.
+		?g  rdfs:type univ:Grade.
 	    ?g univ:for_course ?c.
-    	?c univ:has_professor ?prof.
-    	?c univ:subject <sIRI>.
     	?g ?p ?o.
-    	FILTER (?prof = <pIRI>)
 	}
-	FILTER (?gr = <gIRI>)
+    ?c  rdfs:type univ:Course.
+    ?c univ:has_professor ?prof.
+    ?c univ:subject <sIRI>.
+    FILTER (?gr=<gIRI> && ?prof = <pIRI>)
 }

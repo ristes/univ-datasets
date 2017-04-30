@@ -1,0 +1,9 @@
+PREFIX univ: <http://univ/>
+PREFIX usr: <http://univ/User/>
+PREFIX sp: <http://univ/StydyProgram/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+WITH <testIRI>
+INSERT {
+    ?g ?p ?o
+}

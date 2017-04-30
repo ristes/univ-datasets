@@ -9,5 +9,9 @@ public interface QueryExecutor {
 
   void executeInsert(String dataSet, String query);
 
+  void openDataset(String dataSet);
+
+  void closeDataset();
+
 
 }

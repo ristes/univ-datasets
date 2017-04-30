@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -45,25 +46,43 @@ public class QueryDefinitionLoaderImpl implements TestSupportLoader {
 
     File[] queryTemplates = scenario.listFiles();
     List<Map<String, String>> mapping = loadMapping(scenario);
+    String insert = loadInsert(scenario);
+    String construct = loadConstruct(scenario);
     for (File template : queryTemplates) {
       if (!template.getName().endsWith(".rq")) {
         continue;
       }
-      scenarioQueries.add(buildQueryDefinition(scenario.getName(), template, mapping));
+      scenarioQueries.add(
+        buildQueryDefinition(
+          scenario.getName(),
+          insert,
+          construct,
+          template,
+          mapping
+        )
+      );
     }
     return scenarioQueries;
   }
 
-  private QueryDefinition buildQueryDefinition(String scenario, File template, List<Map<String, String>> mapping) throws IOException {
+
+
+  private QueryDefinition buildQueryDefinition(
+    String scenario,
+    String insert,
+    String construct,
+    File template,
+    List<Map<String, String>> mapping
+  ) throws IOException {
+
     List<String> lines = IOUtils.readLines(new FileInputStream(template), CharEncoding.UTF_8);
     String where = lines.stream().collect(Collectors.joining("\n"));
     QueryDefinition queryDefinition = new QueryDefinition();
-    queryDefinition.setId(template.getName());
+    queryDefinition.setId(scenario + "/" + template.getName());
     queryDefinition.setParams(mapping);
     queryDefinition.setWhere(where);
-    queryDefinition.setGraph("http://univ/" + scenario + "/" + template.getName());
-    queryDefinition.setInsert(prefix + "WITH <" + queryDefinition.getGraph() + "> INSERT " + getGradeProjection());
-    queryDefinition.setSelect(prefix + "CONSTRUCT " + getGradeProjection());
+    queryDefinition.setInsert(insert);
+    queryDefinition.setSelect(construct);
     return queryDefinition;
   }
 
@@ -85,13 +104,19 @@ public class QueryDefinitionLoaderImpl implements TestSupportLoader {
         for (int i = 0; i < headers.size(); i++) {
           mapping.put(headers.get(i), parts[i]);
         }
-        mapping.put("<gIRI>","<univ:StudyProgram/0>");
         return mapping;
       })
       .collect(Collectors.toList());
   }
 
-  public String getGradeProjection() {
-    return " { ?g ?p ?o } ";
+  private String loadConstruct(File scenario) throws IOException {
+    List<String> lines = IOUtils.readLines(new FileInputStream(new File(scenario, "construct")), CharEncoding.UTF_8);
+    return lines.stream().collect(Collectors.joining("\n"));
   }
+
+  private String loadInsert(File scenario) throws IOException {
+    List<String> lines = IOUtils.readLines(new FileInputStream(new File(scenario, "insert")), CharEncoding.UTF_8);
+    return lines.stream().collect(Collectors.joining("\n"));
+  }
+
 }
