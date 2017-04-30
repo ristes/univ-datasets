@@ -5,7 +5,7 @@ package mk.ukim.finki.univds.service;
  */
 public interface QueryExecutor {
 
-  void executeSelect(String dataSet, String query);
+  long executeSelect(String dataSet, String query);
 
   void executeInsert(String dataSet, String query);
 

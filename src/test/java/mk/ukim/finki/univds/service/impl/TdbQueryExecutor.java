@@ -21,15 +21,16 @@ public class TdbQueryExecutor implements QueryExecutor {
   private Dataset dataset;
 
   @Override
-  public void executeSelect(String dataSet, String queryString) {
+  public long executeSelect(String dataSet, String queryString) {
     Query query = QueryFactory.create(queryString);
 
     // Execute the query and obtain results
     QueryExecution qe = QueryExecutionFactory.create(query, dataset);
     Model results = qe.execConstruct();
-
+    long size = results.size();
     // Important - free up resources used running the query
     qe.close();
+    return size;
   }
 
   @Override

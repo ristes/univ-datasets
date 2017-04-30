@@ -102,12 +102,13 @@ public class TestCaseRunner {
     totalInsert.print("INSERT", testCaseIri);
     executor.closeDataset();
     executor.openDataset(dataset);
+    long resultsSize = 0;
     for (int i = 0; i < 12; i++) {
       totalSelect.start(i);
-      executor.executeSelect(dataset, constructQuery);
+      resultsSize = executor.executeSelect(dataset, constructQuery);
       totalSelect.pause(i);
     }
-    totalSelect.print("SELECT", testCaseIri);
+    totalSelect.print("SELECT\t" + resultsSize, testCaseIri);
     executor.closeDataset();
     System.out.println("===========================================================");
   }
