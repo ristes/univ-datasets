@@ -17,7 +17,7 @@ public class User extends BaseEntity {
 
     public static final String RDF_INSTANCE = "http://univ/User";
 
-    private static long idSequence = 0;
+    private static long idSequence = 50;
 
     @Column(length = 31)
     private String DTYPE;
