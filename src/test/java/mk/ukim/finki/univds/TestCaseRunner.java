@@ -92,9 +92,11 @@ public class TestCaseRunner {
 
     executor.openDataset(dataset);
 
+    executor.executeInsert(dataset, "DROP GRAPH <testIRI>");
     for (int i = 0; i < 12; i++) {
+      executor.executeInsert(dataset, "DROP GRAPH " + testCaseIri);
       totalInsert.start(i);
-      executor.executeInsert(dataset, def.getInsert() + where);
+      executor.executeInsert(dataset, insertQuery);
       totalInsert.pause(i);
     }
     totalInsert.print("INSERT", testCaseIri);

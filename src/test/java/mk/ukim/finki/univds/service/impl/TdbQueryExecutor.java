@@ -20,18 +20,6 @@ public class TdbQueryExecutor implements QueryExecutor {
 
   private Dataset dataset;
 
-  public void openDataset(String dataSet) {
-    if (dataset != null) {
-      dataset.close();
-    }
-    dataset = loadDataset(dataSet);
-  }
-
-  public void closeDataset() {
-    dataset.close();
-    dataset = null;
-  }
-
   @Override
   public void executeSelect(String dataSet, String queryString) {
     Query query = QueryFactory.create(queryString);
@@ -49,6 +37,17 @@ public class TdbQueryExecutor implements QueryExecutor {
     UpdateAction.parseExecute(queryString, dataset);
   }
 
+  public void openDataset(String dataSet) {
+    if (dataset != null) {
+      dataset.close();
+    }
+    dataset = loadDataset(dataSet);
+  }
+
+  public void closeDataset() {
+    dataset.close();
+    dataset = null;
+  }
 
   private Dataset loadDataset(String name) {
     String directory = datasetDirectoryPrefix + name;
