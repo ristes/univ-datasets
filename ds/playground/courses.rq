@@ -1,12 +1,13 @@
 PREFIX univ: <http://univ/>
 PREFIX usr: <http://univ/User/>
 PREFIX sp: <http://univ/StydyProgram/>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
 construct {
-	?c ?p ?o
-}
-WHERE {
-    ?c rdfs:type univ:Course.
     ?c ?p ?o
 }
+WHERE {
+    ?c rdf:type univ:Course .
+    ?c ?p ?o
+}
+LIMIT 100

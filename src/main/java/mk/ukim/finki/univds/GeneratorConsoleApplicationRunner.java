@@ -15,17 +15,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
 
 import java.io.OutputStream;
 
 /**
- * Runs spring console application.
+ * Runs spring console application for the generator service.
  */
-@Component
-public class ConsoleApplicationRunner implements CommandLineRunner {
+//@Component
+public class GeneratorConsoleApplicationRunner implements CommandLineRunner {
 
-  private Logger logger = LoggerFactory.getLogger(ConsoleApplicationRunner.class);
+  private Logger logger = LoggerFactory.getLogger(GeneratorConsoleApplicationRunner.class);
 
   @Autowired
   private GeneratorService generatorService;
@@ -51,9 +50,6 @@ public class ConsoleApplicationRunner implements CommandLineRunner {
       ModelHolder.openDataset("ds" + from);
     }
 
-//    // for debugging purpose
-//    print(System.out);
-
     for (int datasetIndex = from; datasetIndex <= to; datasetIndex++) {
       logger.info("=============== Dataset {} now generating", datasetIndex);
       ModelHolder.resetDataset(datasetIndex);
@@ -61,8 +57,6 @@ public class ConsoleApplicationRunner implements CommandLineRunner {
       studyProgram.setFaculty(faculty);
       studyProgramRepository.save(studyProgram);
       noiceDatasourceGenerator.generateData(1, 10, datasetIndex, faculty, studyProgram);
-//      // for debugging purpose
-//      print(System.out);
     }
 
     // just to flush the last dataset.
@@ -76,13 +70,13 @@ public class ConsoleApplicationRunner implements CommandLineRunner {
 //        RDFDataMgr.write(System.out, dataSource, Lang.NQUADS);
 
     Model defaultModel = dataSource.getDefaultModel();
-    System.out.println("====== DEFAULT GRAPH CONTENT ======");
+    logger.info("====== DEFAULT GRAPH CONTENT ======");
     RDFDataMgr.write(outputStream, defaultModel, Lang.NTRIPLES);
 
     dataSource.listNames().forEachRemaining(namedGraph -> {
-      System.out.println();
-      System.out.println();
-      System.out.println("====== NAMED GRAPH " + namedGraph + " CONTENT ======");
+      logger.info("");
+      logger.info("");
+      logger.info("====== NAMED GRAPH " + namedGraph + " CONTENT ======");
       RDFDataMgr.write(outputStream, dataSource.getNamedModel(namedGraph), Lang.NTRIPLES);
     });
   }

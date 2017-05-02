@@ -1,0 +1,15 @@
+PREFIX univ: <http://univ/>
+PREFIX usr: <http://univ/User/>
+PREFIX c: <http://univ/Course/>
+PREFIX sp: <http://univ/StydyProgram/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+construct {
+    ?c ?p ?o
+}
+WHERE {
+	GRAPH ?gr {
+        ?g univ:for_course c:1.
+        ?g ?p ?o
+	}
+}

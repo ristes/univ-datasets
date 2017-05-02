@@ -42,15 +42,12 @@ public class ControlledDatasourceGenerator {
             student.setStudyProgram(studyProgram);
             studentRepository.save(student);
 
-            // add students to courses
-            course.getStudents().add(student);
-
             // ----> generate grades
             Grade grade = GradeFactory.make();
             grade.setCourse(course);
             grade.setStudent(student);
             gradeRepository.save(grade);
         }
-        courseRepository.save(course);
+
     }
 }

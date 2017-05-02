@@ -1,5 +1,7 @@
 package mk.ukim.finki.univds.service;
 
+import org.apache.jena.query.Dataset;
+
 /**
  * @author Riste Stojanov
  */
@@ -13,5 +15,8 @@ public interface QueryExecutor {
 
   void closeDataset();
 
+  Dataset getDataset();
+
+  void deleteNamedGraph(String iri);
 
 }

@@ -1,0 +1,6 @@
+WHERE {
+	GRAPH <gIRI> {
+        ?g univ:for_course <cIRI>.
+        ?g ?p ?o
+	}
+}

@@ -1,0 +1,11 @@
+WHERE {
+	GRAPH <gIRI> {
+		?g  rdfs:type univ:Grade.
+	    ?g univ:for_course ?c.
+    	?g ?p ?o.
+	}
+    ?c  rdfs:type univ:Course.
+    ?c univ:has_professor ?prof.
+    ?c univ:subject ?subj.
+    FILTER (?subj=<sIRI>&& ?prof = <pIRI>)
+}

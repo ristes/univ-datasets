@@ -1,4 +1,7 @@
-select ?g
+select ?g (count ( distinct ?s) AS ?c)
 where {
-	GRAPH ?g {}
+	GRAPH ?g {
+	    ?s ?p ?o
+	}
 }
+group by ?g

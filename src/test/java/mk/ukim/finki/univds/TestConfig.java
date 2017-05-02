@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 
 @EnableAutoConfiguration
-@SpringBootApplication(exclude = ConsoleApplicationRunner.class)
+@SpringBootApplication(exclude = GeneratorConsoleApplicationRunner.class)
 public class TestConfig {
 
 

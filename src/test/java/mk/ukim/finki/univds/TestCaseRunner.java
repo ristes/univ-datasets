@@ -6,6 +6,8 @@ import mk.ukim.finki.univds.service.QueryExecutor;
 import mk.ukim.finki.univds.service.TestSupportLoader;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
@@ -24,8 +26,11 @@ import java.util.Map;
 @ContextConfiguration(classes = TestConfig.class)
 public class TestCaseRunner {
 
+  private static final Logger logger = LoggerFactory.getLogger(TestCaseRunner.class);
+
   public static final String DATASET_PARAM = "dataset";
   public static final String RESULTS_PARAM = "results";
+  public static final int RUNS = 7; // 2 ignorira 5 broi
 
   @Autowired
   TestSupportLoader loader;
@@ -38,14 +43,14 @@ public class TestCaseRunner {
 
   @Test
   public void processScenario() {
-
+    // sorted in _vars.tsv (all _vars.tsv)
     List<QueryDefinition> queries = loadQueries();
 
     for (QueryDefinition def : queries) {
       for (Map<String, String> params : def.getParams()) {
-        for (int i = 0; i < 8; i++) {
-          evaluateExecution(def, params, i);
-        }
+        String dataset = params.get(DATASET_PARAM);
+        Integer c=Integer.parseInt(dataset);
+        evaluateExecution(def, params, 1);
       }
     }
 
@@ -83,33 +88,50 @@ public class TestCaseRunner {
 
     Measurement totalSelect = new Measurement(2, def);
     Measurement totalInsert = new Measurement(2, def);
+    Measurement open = new Measurement(2, def);
+    Measurement close = new Measurement(2, def);
+    Measurement delete = new Measurement(2, def);
 
-    long start = 0;
-    if (constructQuery.equals(lastConstructQuery)) {
-      return;
-    }
-    lastConstructQuery = constructQuery;
 
+    open.start(2);
     executor.openDataset(dataset);
+    open.pause(2);
 
-    executor.executeInsert(dataset, "DROP GRAPH <testIRI>");
-    for (int i = 0; i < 12; i++) {
-      executor.executeInsert(dataset, "DROP GRAPH " + testCaseIri);
+    delete.start(2);
+   // executor.deleteNamedGraph(testCaseIri);
+    delete.pause(2);
+    for (int i = 0; i < RUNS; i++) {
+      delete.start(i+3);
+     // executor.deleteNamedGraph(testCaseIri);
+      delete.pause(i+3);
       totalInsert.start(i);
-      executor.executeInsert(dataset, insertQuery);
+      //executor.executeInsert(dataset, insertQuery);
       totalInsert.pause(i);
     }
     totalInsert.print("INSERT", testCaseIri);
+    close.start(2);
     executor.closeDataset();
+    close.pause(2);
+    open.start(3);
     executor.openDataset(dataset);
+    open.pause(3);
     long resultsSize = 0;
-    for (int i = 0; i < 12; i++) {
+    for (int i = 0; i < RUNS; i++) {
       totalSelect.start(i);
       resultsSize = executor.executeSelect(dataset, constructQuery);
       totalSelect.pause(i);
     }
     totalSelect.print("SELECT\t" + resultsSize, testCaseIri);
+
+    delete.start(15);
+//    executor.deleteNamedGraph(testCaseIri);
+    delete.pause(15);
+    close.start(3);
     executor.closeDataset();
-    System.out.println("===========================================================");
+    close.pause(3);
+    open.print("OPEN", testCaseIri);
+    close.print("CLOSE", testCaseIri);
+    delete.print("DELETE", testCaseIri);
+    logger.info("===========================================================");
   }
 }
