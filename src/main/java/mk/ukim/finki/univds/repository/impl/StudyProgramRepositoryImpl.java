@@ -16,7 +16,9 @@ public class StudyProgramRepositoryImpl implements StudyprogramRepository {
   @Override
   public void save(StudyProgram studyProgram) {
 
-    studyProgram.setId(StudyProgram.nextId());
+    if (studyProgram.getId() == null) {
+      studyProgram.setId(StudyProgram.nextId());
+    }
 
     String instanceIri = studyProgram.getInstanceIRI();
     Model m = ModelHolder.createModel();

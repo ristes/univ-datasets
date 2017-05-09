@@ -26,7 +26,9 @@ public class FacultyRepositoryImpl implements FacultyRepository {
 
     @Override
     public void save(Faculty faculty) {
-        faculty.setId(Faculty.nextId());
+        if (faculty.getId() == null) {
+            faculty.setId(Faculty.nextId());
+        }
 
 //        String instanceIri = faculty.getInstanceIRI();
         Model m = ModelHolder.getDefaultModel();

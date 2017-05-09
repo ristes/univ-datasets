@@ -6,12 +6,15 @@ import org.apache.jena.query.Dataset;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.StmtIterator;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.tdb.TDBFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * @author Riste Stojanov
@@ -19,7 +22,7 @@ import java.io.IOException;
 public class ModelHolder {
 
 
-  private static final String TDB_ROOT_DIR = "ds/tdb/";
+  public static String TDB_ROOT_DIR = "ds/tdb/";
   private static final String TDB_DATASET_DIR = TDB_ROOT_DIR + "ds";
 
   private static Logger logger = LoggerFactory.getLogger(ModelHolder.class);
@@ -73,6 +76,13 @@ public class ModelHolder {
     return dataSet;
   }
 
+  public static void closeDataset() {
+    if (dataSet == null) {
+      throw new IllegalStateException("Cannot close null dataSet!");
+    }
+    dataSet.close();
+    dataSet = null;
+  }
 
   public static Model getDefaultModel() {
     return getDataSource().getDefaultModel();
@@ -98,5 +108,20 @@ public class ModelHolder {
   public static boolean containsResourceInDefaultModel(String iri) {
     Model defaultModel = getDataSource().getDefaultModel();
     return defaultModel.containsResource(Univ.getInstance(defaultModel, iri));
+  }
+
+  public static void print(OutputStream outputStream, Dataset dataSource) {
+//        RDFDataMgr.write(System.out, dataSource, Lang.NQUADS);
+
+    Model defaultModel = dataSource.getDefaultModel();
+    logger.info("====== DEFAULT GRAPH CONTENT ======");
+    RDFDataMgr.write(outputStream, defaultModel, Lang.NTRIPLES);
+
+    dataSource.listNames().forEachRemaining(namedGraph -> {
+      logger.info("");
+      logger.info("");
+      logger.info("====== NAMED GRAPH " + namedGraph + " CONTENT ======");
+      RDFDataMgr.write(outputStream, dataSource.getNamedModel(namedGraph), Lang.NTRIPLES);
+    });
   }
 }

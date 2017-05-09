@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 /**
  * Test evaluations runner.
  */
-@Component
+//@Component
 public class EvaluationConsoleApplicationRunner implements CommandLineRunner {
 
     @Autowired

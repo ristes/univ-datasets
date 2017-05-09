@@ -65,19 +65,19 @@ public class GeneratorConsoleApplicationRunner implements CommandLineRunner {
     logger.info("======== I am done!");
   }
 
-  private void print(OutputStream outputStream) {
-    Dataset dataSource = ModelHolder.getDataSource();
-//        RDFDataMgr.write(System.out, dataSource, Lang.NQUADS);
-
-    Model defaultModel = dataSource.getDefaultModel();
-    logger.info("====== DEFAULT GRAPH CONTENT ======");
-    RDFDataMgr.write(outputStream, defaultModel, Lang.NTRIPLES);
-
-    dataSource.listNames().forEachRemaining(namedGraph -> {
-      logger.info("");
-      logger.info("");
-      logger.info("====== NAMED GRAPH " + namedGraph + " CONTENT ======");
-      RDFDataMgr.write(outputStream, dataSource.getNamedModel(namedGraph), Lang.NTRIPLES);
-    });
-  }
+//  private void print(OutputStream outputStream) {
+//    Dataset dataSource = ModelHolder.getDataSource();
+////        RDFDataMgr.write(System.out, dataSource, Lang.NQUADS);
+//
+//    Model defaultModel = dataSource.getDefaultModel();
+//    logger.info("====== DEFAULT GRAPH CONTENT ======");
+//    RDFDataMgr.write(outputStream, defaultModel, Lang.NTRIPLES);
+//
+//    dataSource.listNames().forEachRemaining(namedGraph -> {
+//      logger.info("");
+//      logger.info("");
+//      logger.info("====== NAMED GRAPH " + namedGraph + " CONTENT ======");
+//      RDFDataMgr.write(outputStream, dataSource.getNamedModel(namedGraph), Lang.NTRIPLES);
+//    });
+//  }
 }

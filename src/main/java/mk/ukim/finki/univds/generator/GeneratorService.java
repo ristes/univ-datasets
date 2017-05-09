@@ -96,7 +96,7 @@ public class GeneratorService {
         for (int i = 0; i < generatorIterations; i++) {
             double entities = Math.pow(10,i);
             logger.info("generating grade-course round {} [#courses={}]", i, entities);
-            datasourceGenerator.generateGradeCourseRelation(professor, subject, entities);
+            datasourceGenerator.generateGradeCourseRelation(professor, subject, entities, null);
         }
 
         logger.info("createGradeCourseRelations()::DONE");
@@ -140,7 +140,7 @@ public class GeneratorService {
             logger.info("generating Grade-Course-Professor/Subject round {} [#courses={}, #grades={}]."
                     , i, numberCourses, numberGrades);
             for (int j = 0; j < numberCourses; j++) {
-                datasourceGenerator.generateGradeCourseRelation(professor, subject, numberGrades);
+                datasourceGenerator.generateGradeCourseRelation(professor, subject, numberGrades, null);
             }
         }
 
