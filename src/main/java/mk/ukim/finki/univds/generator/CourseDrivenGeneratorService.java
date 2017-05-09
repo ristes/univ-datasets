@@ -95,7 +95,7 @@ public class CourseDrivenGeneratorService {
         subjectRepository.save(subject);
 
         for (int k = 0; k <= j; k++) {
-          for (int t = 1; t < courseCount; t++) {
+          for (int t = 1; t <= i; t++) {
             double numberOfGrades = t * 100 * Math.pow(10, k);
             Long courseId = (long) 10 * k + t;
             datasourceGenerator.generateGradeCourseRelation(professor, subject, numberOfGrades, courseId);
