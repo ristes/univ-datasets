@@ -43,8 +43,8 @@ public class CourseDrivenGeneratorEvaluation {
                     for (int t = 1; t < courseCount; t++) {
                         int courseId = 10 * k + t;
                         String testCaseIri = "http://univ/Course/" + courseId;
-                        query = query.replace("cIRI", testCaseIri);
-                        evaluateCourse(query, testCaseIri);
+                        String execQuery = query.replace("cIRI", testCaseIri);
+                        evaluateCourse(execQuery, testCaseIri);
 //        evaluateCourse(10*k+t, dataset,queryString);// pravi replace na queryString so courseIRI pred da go izvrsi
                     }
                 }
