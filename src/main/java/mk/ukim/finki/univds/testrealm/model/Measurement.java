@@ -42,7 +42,7 @@ public class Measurement {
 
   public void print(String name, String test) {
 //    System.out.printf("%s\t%s\t%d\n", name, test, duration);
-    logger.info("{}{}{}{}{}",name,"\t",test,"\t",duration);
+    logger.info("{}{}{}{}{}", name, "\t", test, "\t", duration);
     reset();
   }
 

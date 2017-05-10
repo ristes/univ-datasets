@@ -23,7 +23,8 @@ public class CourseDrivenGeneratorEvaluation {
 
     private static final Logger logger = LoggerFactory.getLogger(CourseDrivenGeneratorEvaluation.class);
 
-    private static final int RUNS = 7;
+    private static final int RUNS = 40;
+    public static final int WARM_UP = 20;
     @Autowired
     private TdbQueryExecutor executor;
 
@@ -39,7 +40,7 @@ public class CourseDrivenGeneratorEvaluation {
             for (int i = 1; i < courseCount; i++) {
                 executor.openDataset(j + "" + i);
 //                ModelHolder.print(System.out, executor.getDataset());
-                for (int k = 0; k < j; k++) {
+                for (int k = 0; k <= j; k++) {
                     for (int t = 1; t < courseCount; t++) {
                         int courseId = 10 * k + t;
                         String testCaseIri = "http://univ/Course/" + courseId;
@@ -55,7 +56,7 @@ public class CourseDrivenGeneratorEvaluation {
 
     private void evaluateCourse(String query, String testCaseIri) {
 
-        Measurement totalSelect = new Measurement(2, null);
+        Measurement totalSelect = new Measurement(WARM_UP, null);
         long resultsSize = 0;
         for (int run = 0; run < RUNS; run++) {
             totalSelect.start(run);
