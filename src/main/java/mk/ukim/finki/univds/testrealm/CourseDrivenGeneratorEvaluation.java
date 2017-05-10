@@ -1,19 +1,13 @@
 package mk.ukim.finki.univds.testrealm;
 
-import com.sun.org.apache.xpath.internal.operations.Mod;
-import mk.ukim.finki.univds.repository.impl.ModelHolder;
 import mk.ukim.finki.univds.testrealm.model.Measurement;
 import mk.ukim.finki.univds.testrealm.model.service.impl.TdbQueryExecutor;
-import org.apache.jena.base.Sys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.stream.Collectors;
+import java.util.List;
 
 /**
  * Created by KarateKid on 09.5.2017.
@@ -24,31 +18,19 @@ public class CourseDrivenGeneratorEvaluation {
     private static final Logger logger = LoggerFactory.getLogger(CourseDrivenGeneratorEvaluation.class);
 
     private static final int RUNS = 40;
-    public static final int WARM_UP = 20;
+    private static final int WARM_UP = 20;
+
     @Autowired
     private TdbQueryExecutor executor;
 
     // datasetCount == i
     // courseCount == j
-    public void evaluate(int datasetCount, int courseCount, String pathToQuery) throws IOException {
-        String query = Files.readAllLines(Paths.get(pathToQuery))
-                .stream()
-                .collect(Collectors.joining("\n"));
-        query = query.replace("gIRI", "http://univ/StudyProgram/1");
-
-        for (int j = 1; j < datasetCount; j++) {
+    public void evaluate(int datasetCount, int courseCount, List<QueryHolder> queries) {
+        for (int j = 0; j < datasetCount; j++) {
             for (int i = 1; i < courseCount; i++) {
-                executor.openDataset(j + "" + i);
-//                ModelHolder.print(System.out, executor.getDataset());
-                for (int k = 0; k <= j; k++) {
-                    for (int t = 1; t < courseCount; t++) {
-                        int courseId = 10 * k + t;
-                        String testCaseIri = "http://univ/Course/" + courseId;
-                        String execQuery = query.replace("cIRI", testCaseIri);
-                        evaluateCourse(execQuery, testCaseIri);
-//        evaluateCourse(10*k+t, dataset,queryString);// pravi replace na queryString so courseIRI pred da go izvrsi
-                    }
-                }
+                String dataSetSuffix = j + "" + i;
+                executor.openDataset(dataSetSuffix);
+                queries.forEach(query -> evaluateCourse(query.getQuery(), query.getName()));
                 executor.closeDataset();
             }
         }
