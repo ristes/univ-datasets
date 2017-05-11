@@ -27,44 +27,42 @@ public class TestApplicationRunner {
                 "{0}" +
                 "'}'\n";
         bodyPart =
-                "\t'{'\n" +
-                "\t\t?g univ:for_course <http://univ/Course/{0}>.\n" +
-                "\t\t?g ?p ?o\n" +
-                "\t'}'";
+                "\t?g univ:for_course <http://univ/Course/{0}>.\n" +
+                "\t?g ?p ?o";
 
 
-        generateQuery(1,3);
-        generateQuery(4,6);
+//        generateQuery(1,3);
+//        generateQuery(4,6);
         generateQuery(1,6);
 
-        StaticQueryBuilder builder = new StaticQueryBuilder(querySceleton, bodyPart);
-        for (int i = 0; i < 4; i++) {
-            if (i==0) {
-                 builder.appendBodyPart("1").appendOperation(StaticQueryBuilder.Operations.UNION)
-                        .appendBodyPart("2").appendOperation(StaticQueryBuilder.Operations.UNION)
-                        .appendBodyPart("3").appendOperation(StaticQueryBuilder.Operations.MINUS)
-                        .appendBodyPart("1").appendOperation(StaticQueryBuilder.Operations.UNION)
-                        .appendBodyPart("4").appendOperation(StaticQueryBuilder.Operations.MINUS)
-                        .appendBodyPart("2").appendOperation(StaticQueryBuilder.Operations.UNION)
-                        .appendBodyPart("5").appendOperation(StaticQueryBuilder.Operations.MINUS)
-                        .appendBodyPart("3").appendOperation(StaticQueryBuilder.Operations.UNION)
-                        .appendBodyPart("6");
-            } else {
-                builder.appendBodyPart(i+"1").appendOperation(StaticQueryBuilder.Operations.UNION)
-                        .appendBodyPart(i+"2").appendOperation(StaticQueryBuilder.Operations.UNION)
-                        .appendBodyPart(i+"3").appendOperation(StaticQueryBuilder.Operations.MINUS)
-                        .appendBodyPart(i+"1").appendOperation(StaticQueryBuilder.Operations.UNION)
-                        .appendBodyPart(i+"4").appendOperation(StaticQueryBuilder.Operations.MINUS)
-                        .appendBodyPart(i+"2").appendOperation(StaticQueryBuilder.Operations.UNION)
-                        .appendBodyPart(i+"5").appendOperation(StaticQueryBuilder.Operations.MINUS)
-                        .appendBodyPart(i+"3").appendOperation(StaticQueryBuilder.Operations.UNION)
-                        .appendBodyPart(i+"6");
-            }
-            String fileName = "longQuery-C" + i + ".rq";
-            String query = builder.build();
-            System.out.println(query);
-            Files.write(Paths.get(fileName), query.getBytes());
-        }
+//        StaticQueryBuilder builder = new StaticQueryBuilder(querySceleton, bodyPart);
+//        for (int i = 0; i < 4; i++) {
+//            if (i==0) {
+//                 builder.appendBodyPart("1").appendOperation(StaticQueryBuilder.Operations.UNION)
+//                        .appendBodyPart("2").appendOperation(StaticQueryBuilder.Operations.UNION)
+//                        .appendBodyPart("3").appendOperation(StaticQueryBuilder.Operations.MINUS)
+//                        .appendBodyPart("1").appendOperation(StaticQueryBuilder.Operations.UNION)
+//                        .appendBodyPart("4").appendOperation(StaticQueryBuilder.Operations.MINUS)
+//                        .appendBodyPart("2").appendOperation(StaticQueryBuilder.Operations.UNION)
+//                        .appendBodyPart("5").appendOperation(StaticQueryBuilder.Operations.MINUS)
+//                        .appendBodyPart("3").appendOperation(StaticQueryBuilder.Operations.UNION)
+//                        .appendBodyPart("6");
+//            } else {
+//                builder.appendBodyPart(i+"1").appendOperation(StaticQueryBuilder.Operations.UNION)
+//                        .appendBodyPart(i+"2").appendOperation(StaticQueryBuilder.Operations.UNION)
+//                        .appendBodyPart(i+"3").appendOperation(StaticQueryBuilder.Operations.MINUS)
+//                        .appendBodyPart(i+"1").appendOperation(StaticQueryBuilder.Operations.UNION)
+//                        .appendBodyPart(i+"4").appendOperation(StaticQueryBuilder.Operations.MINUS)
+//                        .appendBodyPart(i+"2").appendOperation(StaticQueryBuilder.Operations.UNION)
+//                        .appendBodyPart(i+"5").appendOperation(StaticQueryBuilder.Operations.MINUS)
+//                        .appendBodyPart(i+"3").appendOperation(StaticQueryBuilder.Operations.UNION)
+//                        .appendBodyPart(i+"6");
+//            }
+//            String fileName = "longQuery-C" + i + ".rq";
+//            String query = builder.build();
+//            System.out.println(query);
+//            Files.write(Paths.get(fileName), query.getBytes());
+//        }
 
     }
 
@@ -73,15 +71,19 @@ public class TestApplicationRunner {
         for (int i = 0; i < 4; i++) {
             for (int j = subsetFrom; j < subsetTo + 1; j++) {
                 int courseId = i*10 + j;
-                builder = builder.appendBodyPart("" + courseId).appendOperation(StaticQueryBuilder.Operations.UNION);
+                builder = builder.appendBodyPart("" + courseId);
+                save(builder, i, j);
 //                System.out.println(i*10 + j);
             }
-            String fileName = "queryUnion-C" + i + "" + subsetFrom + "-C" + i + "" + subsetTo + ".rq";
-            System.out.println("Just created: " + fileName);
-            String query = builder.build();
-            System.out.println(query);
-            Files.write(Paths.get(fileName), query.getBytes());
         }
+    }
+
+    private static void save(StaticQueryBuilder builder, int i, int j) throws IOException {
+        String fileName = "f" + i + "" + j + ".rq";
+        System.out.println("Just created: " + fileName);
+        String query = builder.build();
+        System.out.println(query);
+        Files.write(Paths.get(fileName), query.getBytes());
     }
 
 
