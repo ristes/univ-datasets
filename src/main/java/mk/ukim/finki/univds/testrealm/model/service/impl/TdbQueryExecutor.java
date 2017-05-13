@@ -1,5 +1,6 @@
 package mk.ukim.finki.univds.testrealm.model.service.impl;
 
+import mk.ukim.finki.univds.testrealm.QueryResultsHolder;
 import mk.ukim.finki.univds.testrealm.model.service.QueryExecutor;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
@@ -33,6 +34,21 @@ public class TdbQueryExecutor implements QueryExecutor {
     long size = results.size();
     qe.close();
     return size;
+  }
+
+  @Override
+  public QueryResultsHolder executeAndStoreSelect(String queryString) {
+    Query query = QueryFactory.create(queryString);
+
+    // Execute the query and obtain results
+    QueryExecution qe = QueryExecutionFactory.create(query, dataset);
+    Model results = qe.execConstruct();
+    long size = results.size();
+    QueryResultsHolder queryResultsHolder = new QueryResultsHolder();
+    queryResultsHolder.setModel(results);
+    queryResultsHolder.setResultSize(size);
+    qe.close();
+    return queryResultsHolder;
   }
 
   @Override
