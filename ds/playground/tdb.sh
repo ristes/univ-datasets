@@ -1,3 +1,3 @@
 #!/bin/bash
 
-tdbquery --loc ../tdb/ds11/ --query $1 --time --explain
+tdbquery --loc ../tdb/univ-ds/ --query $1 --time

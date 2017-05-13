@@ -1,0 +1,21 @@
+PREFIX univ: <http://univ/>
+PREFIX usr: <http://univ/User/>
+PREFIX crs: <http://univ/Course/>
+PREFIX sub: <http://univ/Subject/>
+PREFIX grd: <http://univ/Grade/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+construct {
+	?s ?p ?o.
+	?st ?pst ?ost
+}
+where {
+    ?s rdf:type univ:Course.
+    GRAPH ?gr {
+        ?g univ:for_course ?s .
+        ?g univ:for_student ?st .
+        ?st ?pst ?ost
+    }
+    ?s ?p ?o
+
+}

@@ -1,0 +1,19 @@
+PREFIX univ: <http://univ/>
+PREFIX usr: <http://univ/User/>
+PREFIX crs: <http://univ/Course/>
+PREFIX sub: <http://univ/Subject/>
+PREFIX grd: <http://univ/Grade/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+Select
+	?s (MAX(?o) AS ?a)
+where {
+    ?c rdf:type univ:Course.
+    ?c univ:has_professor ?s.
+    GRAPH ?gr {
+        ?g univ:for_course ?c .
+        ?g univ:grade_value ?o
+    }
+}
+group by ?s
+LIMIT 100
