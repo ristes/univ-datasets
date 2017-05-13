@@ -18,10 +18,10 @@ public class CourseDrivenGeneratorEvaluation {
 
     private static final Logger logger = LoggerFactory.getLogger(CourseDrivenGeneratorEvaluation.class);
 
-    @Value("evaluation.runs:40")
+    @Value("${evaluation.runs:40}")
     private int RUNS;
 
-    @Value("evaluation.warmup:20")
+    @Value("${evaluation.warmup:20}")
     private int WARM_UP;
 
     @Autowired
