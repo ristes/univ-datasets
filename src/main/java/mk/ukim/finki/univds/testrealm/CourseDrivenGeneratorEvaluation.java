@@ -5,6 +5,7 @@ import mk.ukim.finki.univds.testrealm.model.service.impl.TdbQueryExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,8 +18,11 @@ public class CourseDrivenGeneratorEvaluation {
 
     private static final Logger logger = LoggerFactory.getLogger(CourseDrivenGeneratorEvaluation.class);
 
-    private static final int RUNS = 40;
-    private static final int WARM_UP = 20;
+    @Value("evaluation.runs:40")
+    private int RUNS;
+
+    @Value("evaluation.warmup:20")
+    private int WARM_UP;
 
     @Autowired
     private TdbQueryExecutor executor;
