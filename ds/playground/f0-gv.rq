@@ -8,7 +8,7 @@ CONSTRUCT {
     ?g ?p ?o
 } WHERE {
 
-        ?g univ:for_course c:11 .
+        ?g univ:for_course c:1 .
         ?g ?p ?o
 
 }
