@@ -1,0 +1,51 @@
+INSERT {
+	GRAPH <http://secuniv.finki.ukim.mk/sec/user/__userId__>
+	{
+		?x ?p ?o
+	}
+}
+WHERE
+{
+	{
+		?x ?p ?o .
+		?x a <http://secuniv.finki.ukim.mk/vocab/studyprogram> .
+		?x <http://secuniv.finki.ukim.mk/vocab/studyprogram_faculty_id> ?f .
+		<http://secuniv.finki.ukim.mk/user/__userId__> <http://secuniv.finki.ukim.mk/vocab/user_studyProgram_id> ?sp .
+		?sp <http://secuniv.finki.ukim.mk/vocab/studyprogram_faculty_id> ?f
+	}
+	UNION
+	{
+		?x ?p ?o .
+		?x a <http://secuniv.finki.ukim.mk/vocab/subject> .
+		?sp <http://secuniv.finki.ukim.mk/vocab/subject_studyprogram> ?x .
+		<http://secuniv.finki.ukim.mk/user/__userId__> <http://secuniv.finki.ukim.mk/vocab/user_studyProgram_id> ?sp
+	}
+	UNION
+	{
+		?x ?p ?o .
+	     FILTER (?x=<http://secuniv.finki.ukim.mk/user/__userId__>)
+	}
+	UNION
+	{
+		?x ?p ?o .
+		?x a <http://secuniv.finki.ukim.mk/vocab/course> .
+		?x ?cu <http://secuniv.finki.ukim.mk/user/__userId__> .
+		FILTER (?p!=<http://secuniv.finki.ukim.mk/vocab/course_user>)
+	}
+	UNION
+	{
+		?x ?p ?o .
+		?x a <http://secuniv.finki.ukim.mk/vocab/grade> .
+		?x <http://secuniv.finki.ukim.mk/vocab/grade_student_id> <http://secuniv.finki.ukim.mk/user/__userId__>
+	}
+	UNION
+	{
+		?x ?p ?o .
+		?x a <http://secuniv.finki.ukim.mk/vocab/user> .
+		?x  <http://secuniv.finki.ukim.mk/vocab/user_DTYPE> "Professor" .
+		?x <http://secuniv.finki.ukim.mk/vocab/user_faculty_id> ?f .
+		<http://secuniv.finki.ukim.mk/user/__userId__> <http://secuniv.finki.ukim.mk/vocab/user_studyProgram_id> ?sp .
+		?sp <http://secuniv.finki.ukim.mk/vocab/studyprogram_faculty_id> ?f .
+		FILTER (?p!=<http://secuniv.finki.ukim.mk/vocab/user_phone>)
+	}
+}
