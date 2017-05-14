@@ -1,0 +1,54 @@
+PREFIX univ: <http://univ/>
+PREFIX usr: <http://univ/User/>
+PREFIX crs: <http://univ/Course/>
+PREFIX sub: <http://univ/Subject/>
+PREFIX grd: <http://univ/Grade/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+
+select
+    ?x ?p ?o
+WHERE {
+	{
+		?x ?p ?o .
+		?x a <http://univ/StudyProgram> .
+		?x <http://univ/faculty> ?f .
+		<http://univ/User/5440802> <http://univ/enrolled_at> ?sp .
+		?sp <http://univ/faculty> ?f
+	}
+	UNION
+	{
+		?x ?p ?o .
+		?x a <http://univ/Subject> .
+		?x <http://univ/study_program> ?sp .
+		<http://univ/User/5440802> <http://univ/enrolled_at> ?sp
+	}
+	UNION
+	{
+		?x ?p ?o .
+	    FILTER (?x=<http://univ/User/5440802>)
+	}
+	UNION
+	{
+		?x ?p ?o .
+		?x a <http://univ/Course> .
+		?x ?cu <http://univ/User/5440802> .
+		FILTER (?p!=<http://univ/for_student>)
+	}
+	UNION
+	{
+		?x ?p ?o .
+		?x a <http://univ/Grade> .
+		?x <http://univ/for_student> <http://univ/User/5440802>
+	}
+	UNION
+	{
+		?x ?p ?o .
+		?x a <http://univ/User> .
+		?x <http://univ/DTYPE> "Professor" .
+		?x <http://univ/works_at> ?f .
+		<http://univ/User/5440802> <http://univ/enrolled_at> ?sp .
+		?sp <http://univ/faculty> ?f .
+		FILTER (?p!=<http://univ/phone>)
+	}
+}
