@@ -1,0 +1,23 @@
+PREFIX univ: <http://univ/>
+PREFIX usr: <http://univ/User/>
+PREFIX sp: <http://univ/StydyProgram/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+construct {
+	?g ?p ?o
+}
+where {
+	?g rdf:type univ:Grade. 
+	?g univ:for_course <http://univ/Course/23>. 
+	?g univ:grade_value ?gv. 
+	?g ?p ?o.
+	{
+		select (min(xsd:integer(?v)) as ?a) 
+		where { 
+			?g <http://univ/grade_value> ?v 
+		} 
+	}
+	FILTER (xsd:integer(?gv) >= ?a)
+}
