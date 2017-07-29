@@ -1,46 +1,23 @@
 PREFIX univ: <http://univ/>
 PREFIX usr: <http://univ/User/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
-construct 
-{
-	?g ?r ?o. 
-	?c univ:has_professor ?p.
-}
+select  ?gr ?g ?r ?o
 where {
-    OPTIONAL {
         graph ?gr {
-            ?g rdfs:type univ:Grade .
+            ?g rdf:type univ:Grade .
             ?g univ:for_course ?c .
-            ?g univ:for_student ?s .
+            ?g univ:for_student usr:182 .
             ?g univ:grade_value ?v .
             ?g ?r ?o
         }
-         FILTER EXISTS {
-        		    {   # Profesorite gi gledaat ocenite povisoki od 9 ili 10
-                        ?g rdfs:type univ:Grade .
-                        ?g univ:for_course ?c1 .
-                        ?g univ:grade_value ?v .
-                        FILTER (?v="10" || ?v="9")
-                    }
-                    union
-                    {	# Profesorite gi gledaat svoite oceni
-                        ?c univ:has_professor usr:14 .
-                        ?g rdfs:type univ:Grade .
-                        ?g univ:for_course ?c
-                    }
-        	    }
-        	    }
-        #?c univ:has_professor ?p.
-	    OPTIONAL {
-	        ?c univ:has_professor ?p.
-	        filter exists  {
-	            ?c univ:has_professor ?v12.
-                FILTER (?v12=usr:14)
-            }
-    	}
-
-    }
+        values (?gr ?g ?r ?o) {
+            (<http://univ/StudyProgram/1>  <http://univ/Grade/000>  rdf:type  univ:Grade )
+            (<http://univ/StudyProgram/1>  <http://univ/Grade/000>  univ:for_course  <http://univ/Course/3> )
+            (<http://univ/StudyProgram/1>  <http://univ/Grade/000>  univ:grade_value 7 )
+            (<http://univ/StudyProgram/1>  <http://univ/Grade/000>  univ:for_student  <http://univ/User/182> )
+        }
 }
 
 

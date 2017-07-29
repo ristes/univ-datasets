@@ -1,0 +1,50 @@
+<rdf:RDF
+        xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        xmlns:owl="http://www.w3.org/2002/07/owl#"
+        xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+>
+    <rdfs:Class rdf:about="http://policy/Policy">
+        <rdfs:comment xml:lang="en_US">The Policy object</rdfs:comment>
+    </rdfs:Class>
+    <owl:DatatypeProperty rdf:about="http://policy/head_quad">
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:domain rdf:resource="http://policy/Policy"/>
+        <rdfs:comment xml:lang="en_US">This property represents a quad pattern that defines which quads will be
+            protected.
+        </rdfs:comment>
+    </owl:DatatypeProperty>
+    <owl:DatatypeProperty rdf:about="http://policy/intent_binding">
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:domain rdf:resource="http://policy/Policy"/>
+        <rdfs:comment xml:lang="en_US">Contains a SPARQL SELECT query that is used to activate
+            the policy, through extracting the corresponding variables from the intent
+            that satisfy the query’s WHERE constrain. The policy is not applicable for
+            a particular intent when this query does not return any results.
+        </rdfs:comment>
+    </owl:DatatypeProperty>
+    <owl:DatatypeProperty rdf:about="http://policy/protected_datasets">
+        <rdfs:domain rdf:resource="http://policy/Policy"/>
+        <rdfs:comment xml:lang="en_US">Defines the datasets for which this policy will be applied.</rdfs:comment>
+    </owl:DatatypeProperty>
+    <owl:DatatypeProperty rdf:about="http://policy/protected_data">
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+        <rdfs:domain rdf:resource="http://policy/Policy"/>
+        <rdfs:comment xml:lang="en_US">Defines the data that is being protected. It accepts a SPARQL
+            queries' WHERE element as value.
+        </rdfs:comment>
+    </owl:DatatypeProperty>
+    <owl:DatatypeProperty rdf:about="http://policy/permission">
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+        <rdfs:domain rdf:resource="http://policy/Policy"/>
+        <rdfs:comment xml:lang="en_US">Defines whether the policy allow (true) or deny (false) the protected data. This
+            property replaces the &lt;http://permission/enforce&gt; property.
+        </rdfs:comment>
+    </owl:DatatypeProperty>
+    <owl:DatatypeProperty rdf:about="http://policy/priority">
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+        <rdfs:domain rdf:resource="http://policy/Policy"/>
+        <rdfs:comment xml:lang="en_US">This property is used for conflict resolution, by or ordering the policies in the
+            enforcement process. It has a xsd:double value.
+        </rdfs:comment>
+    </owl:DatatypeProperty>
+</rdf:RDF>

@@ -1,0 +1,34 @@
+<rdf:RDF
+        xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        xmlns:owl="http://www.w3.org/2002/07/owl#"
+        xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+    <rdfs:Class rdf:about="http://intent/Agent">
+        <owl:disjointWith>
+            <owl:Class rdf:about="http://intent/Requester"/>
+        </owl:disjointWith>
+        <rdfs:comment xml:lang="en_US">The Agent object</rdfs:comment>
+    </rdfs:Class>
+    <owl:Class rdf:about="http://intent/Requester">
+        <owl:disjointWith rdf:resource="http://intent/Agent"/>
+        <rdfs:comment xml:lang="en_US">The Requester object</rdfs:comment>
+    </owl:Class>
+    <owl:Class rdf:about="http://intent/IP_address">
+        <owl:disjointWith rdf:resource="http://intent/Agent"/>
+        <owl:Class rdf:about="http://intent/Requester"/>
+        <rdfs:comment xml:lang="en_US">An Ip address definition object</rdfs:comment>
+    </owl:Class>
+    <owl:DatatypeProperty rdf:about="http://intent/ip">
+        <rdfs:domain rdf:resource="http://intent/Agent"/>
+        <rdfs:range rdf:resource="http://intent/IP_address"/>
+        <rdfs:comment xml:lang="en_US">The ip address of the Agent object</rdfs:comment>
+    </owl:DatatypeProperty>
+    <owl:DatatypeProperty rdf:about="http://intent/address">
+        <rdfs:domain rdf:resource="http://intent/IP_address"/>
+        <rdfs:comment xml:lang="en_US">The IP address value</rdfs:comment>
+    </owl:DatatypeProperty>
+    <owl:DatatypeProperty rdf:about="http://intent/network">
+        <rdfs:domain rdf:resource="http://intent/IP_address"/>
+        <rdfs:comment xml:lang="en_US">The network property of the IP address class</rdfs:comment>
+    </owl:DatatypeProperty>
+</rdf:RDF>
