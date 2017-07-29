@@ -1,6 +1,7 @@
 package mk.ukim.finki.univds.testrealm;
 
 import mk.ukim.finki.univds.testrealm.model.Measurement;
+import mk.ukim.finki.univds.testrealm.model.service.QueryExecutor;
 import mk.ukim.finki.univds.testrealm.model.service.impl.TdbQueryExecutor;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.Lang;
@@ -44,7 +45,7 @@ public class CourseDrivenGeneratorEvaluation {
     private int datasetCountStart;
 
     @Autowired
-    private TdbQueryExecutor executor;
+    private QueryExecutor executor;
 
     // datasetCount == i
     // courseCount == j

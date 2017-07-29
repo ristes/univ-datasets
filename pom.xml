@@ -18,6 +18,19 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
+    <repositories>
+        <repository>
+            <id>in-project-virtjdbc</id>
+            <name>In Project Repo for VirtJDBC</name>
+            <url>file://${project.basedir}/local-dependencies</url>
+        </repository>
+        <repository>
+            <id>in-project-virtjena</id>
+            <name>In Project Repo for VirtJena</name>
+            <url>file://${project.basedir}/local-dependencies</url>
+        </repository>
+    </repositories>
+
     <properties>
         <start-class>mk.ukim.finki.univds.Application</start-class>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -52,7 +65,7 @@
             <groupId>org.apache.jena</groupId>
             <artifactId>apache-jena-libs</artifactId>
             <type>pom</type>
-            <version>3.2.0</version>
+            <version>3.3.0</version>
         </dependency>
 
         <dependency>
@@ -61,6 +74,17 @@
             <version>3.2.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>virtuoso</groupId>
+            <artifactId>virtjena</artifactId>
+            <version>3.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>virtuoso</groupId>
+            <artifactId>virtjdbc</artifactId>
+            <version>4.0</version>
+        </dependency>
 
         <!-- Database connectors -->
         <dependency>
@@ -72,7 +96,6 @@
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
         </dependency>
-
 
         <!-- Tools and Utils -->
         <dependency>
@@ -92,7 +115,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -121,9 +143,5 @@
                 </configuration>
             </plugin>
         </plugins>
-
-
     </build>
-
-
 </project>

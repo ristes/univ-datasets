@@ -33,9 +33,6 @@ public class CourseDrivenGeneratorApplicationRunner implements CommandLineRunner
     @Autowired
     private CourseDrivenGeneratorEvaluation evaluator;
 
-//    @Value("#{'${course.driven.evaluation.queries.path}'.split(',')}")
-//    private List<String> queryPaths;
-
     @Value("${course.driven.evaluation.queries.directory}")
     private String queryRootDirectory;
 
@@ -54,23 +51,10 @@ public class CourseDrivenGeneratorApplicationRunner implements CommandLineRunner
 
         logger.info("evaluating data with queries located in {}", queryRootDirectory);
         List<QueryHolder> queries = loadQueries();
-//        logger.info("evaluating data with query located in {}", queryPaths);
         evaluator.evaluate(datasetCount, courseCount, queries);
         logger.info("im done.");
     }
 
-//    private List<QueryHolder> loadQueries() {
-//        return queryPaths.stream().map(pathToQuery -> {
-//                try {
-//                    QueryHolder queryHolder = new QueryHolder();
-//                    queryHolder.setName(pathToQuery);
-//                    queryHolder.setQuery(loadQuery(pathToQuery));
-//                    return queryHolder;
-//                } catch (IOException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }).collect(Collectors.toList());
-//    }
 
     private List<QueryHolder> loadQueries() throws IOException {
         List<QueryHolder> queries = Lists.newArrayList();
@@ -89,13 +73,7 @@ public class CourseDrivenGeneratorApplicationRunner implements CommandLineRunner
         return queries;
     }
 
-//    private String loadQuery(String pathToQuery) throws IOException {
-//        return Files.readAllLines(Paths.get(pathToQuery))
-//                .stream()
-//                .collect(Collectors.joining("\n"));
-//    }
-
-        private String loadQuery(Path pathToQuery) throws IOException {
+    private String loadQuery(Path pathToQuery) throws IOException {
         return Files.readAllLines(pathToQuery)
                 .stream()
                 .collect(Collectors.joining("\n"));

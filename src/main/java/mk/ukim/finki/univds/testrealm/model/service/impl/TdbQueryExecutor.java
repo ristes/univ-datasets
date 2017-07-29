@@ -9,12 +9,14 @@ import org.apache.jena.update.UpdateAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 /**
- * @author Riste Stojanov
+ * {@link QueryExecutor} implementation that executes queries over tdb store.
  */
 @Service
+@Profile("tdb")
 public class TdbQueryExecutor implements QueryExecutor {
 
   private static final Logger logger = LoggerFactory.getLogger(TdbQueryExecutor.class);
